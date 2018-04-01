@@ -83,12 +83,12 @@ namespace ImageService
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            // Set up a timer to trigger every minute.  
-            System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Enabled = true;
-            timer.Interval = 60000; // 60 seconds  
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-            timer.Start();
+            //// Set up a timer to trigger every minute.  
+            //System.Timers.Timer timer = new System.Timers.Timer();
+            //timer.Enabled = true;
+            //timer.Interval = 60000; // 60 seconds  
+            //timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
+            //timer.Start();
 
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;

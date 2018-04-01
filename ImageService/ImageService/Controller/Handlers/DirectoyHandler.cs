@@ -24,6 +24,16 @@ namespace ImageService.Controller.Handlers
 
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
 
-		// Implement Here!
+        public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartHandleDirectory(string dirPath)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Implement Here!
     }
 }
