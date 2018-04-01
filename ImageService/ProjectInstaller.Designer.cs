@@ -59,6 +59,6 @@
 
         //[System.ServiceProcess.ServiceProcessDescription("ServiceProcessInstallerAccount")]
         //public System.ServiceProcess.ServiceAccount Account { get; set; }
-        
+
     }
 }
