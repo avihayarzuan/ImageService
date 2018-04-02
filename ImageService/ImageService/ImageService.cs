@@ -15,6 +15,7 @@ using ImageService.Logging;
 using ImageService.Logging.Model;
 using System.Configuration;
 using ImageService.Infrastructure;
+using System.Timers;
 
 namespace ImageService
 {
@@ -45,6 +46,14 @@ namespace ImageService
     {
         private int eventId = 1;
 
+        private ImageServer m_imageServer;          // The Image Server
+		private IImageServiceModel model;
+		private IImageController controller;
+        private EventLog eventLog1;
+        private ILoggingService logging;
+
+        //constructor of ImageServer
+        //need to put here parsing from appconfig
         public ImageService(string[] args)
         {
             InitializeComponent();
@@ -78,39 +87,49 @@ namespace ImageService
             eventLog1.WriteEntry("In OnStart");
 
             // Update the service state to Start Pending.  
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 100000;
+            ServiceStatus serviceStatus = new ServiceStatus
+            {
+                dwCurrentState = ServiceState.SERVICE_START_PENDING,
+                dwWaitHint = 100000
+            };
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            //// Set up a timer to trigger every minute.  
-            //System.Timers.Timer timer = new System.Timers.Timer();
-            //timer.Enabled = true;
-            //timer.Interval = 60000; // 60 seconds  
-            //timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-            //timer.Start();
+            // Set up a timer to trigger every minute.  
+            System.Timers.Timer timer = new System.Timers.Timer
+            {
+                Enabled = true,
+                Interval = 60000 // 60 seconds  
+            };
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
+            timer.Start();
 
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
-        private ImageServer m_imageServer;          // The Image Server
-		private IImageServiceModel model;
-		private IImageController controller;
-        private EventLog eventLog1;
-        private ILoggingService logging;
 
         protected override void OnStop()
         {
             eventLog1.WriteEntry("In onStop");
         }
 
+        protected override void OnContinue()
+        {
+            base.OnContinue();
+        }
+
+        //private void OnMessage() ???
+
         private void InitializeComponent()
         {
             this.eventLog1 = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+        }
 
+        public void OnTimer(object sender, ElapsedEventArgs eeArgs)
+        {
+            eventLog1.WriteEntry("Monitor OnTimer", EventLogEntryType.Information, eventId++);
         }
     }
 }

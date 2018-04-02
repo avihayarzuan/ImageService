@@ -1,5 +1,4 @@
-﻿
-using ImageService.Logging.Model;
+﻿using ImageService.Logging.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +10,15 @@ namespace ImageService.Logging
     public class LoggingService : ILoggingService
     {
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
+
         public void Log(string message, MessageTypeEnum type)
         {
-
+            MessageRecievedEventArgs msgRec = new MessageRecievedEventArgs
+            {
+                Status = type,
+                Message = message
+            };
+            MessageRecieved?.Invoke(this, msgRec);
         }
     }
 }

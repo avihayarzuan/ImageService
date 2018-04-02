@@ -17,7 +17,7 @@ namespace ImageService.Controller
 
         public ImageController(IImageServiceModel model)
         {
-            m_model = odel;                    // Storing the Model Of The System
+            m_model = model;                    // Storing the Model Of The System
             commands = new Dictionary<int, ICommand>()
             {
 				// For Now will contain NEW_FILE_COMMAND
