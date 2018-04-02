@@ -16,6 +16,7 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
+        //test
         private IImageController m_controller;              // The Image Processing Controller
         private ILoggingService m_logging;
         //private FileSystemWatcher m_dirWatcher;             // The Watcher of the Dir
