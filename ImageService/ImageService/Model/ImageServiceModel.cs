@@ -13,12 +13,20 @@ namespace ImageService.Model
 {
     public class ImageServiceModel : IImageServiceModel
     {
+
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
         //we init this once so that if the function is repeatedly called
         //it isn't stressing the garbage man
         private static Regex r = new Regex(":");
+        #endregion
+
+        public ImageServiceModel(string outputDir, int thumbnailSize)
+        {
+            m_OutputFolder = outputDir;
+            m_thumbnailSize = thumbnailSize;
+        }
 
         public string AddFile(string path, out bool result)
         {
@@ -54,7 +62,6 @@ namespace ImageService.Model
             Image thumb = myImage.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
             thumb.Save(destDir);
         }
-        #endregion
 
     }
 }
