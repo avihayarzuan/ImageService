@@ -18,14 +18,20 @@ namespace ImageService.Controller
         public ImageController(IImageServiceModel model)
         {
             m_model = model;                    // Storing the Model Of The System
-            commands = new Dictionary<int, ICommand>()
-            {
-				// For Now will contain NEW_FILE_COMMAND
-            };
+            commands = new Dictionary<int, ICommand>();
+            commands.Add(1, new NewFileCommand(m_model));
         }
+
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
-           // Write Code Here
+            // rememeber to return the correct string blablabla
+            resultSuccesful = true;
+            if (!commands.ContainsKey(commandID)) {
+                resultSuccesful = false;
+                return "Command not found";
+            }
+            ICommand command = commands[commandID];
+            return command.Execute(args, out bool res);
         }
     }
 }
