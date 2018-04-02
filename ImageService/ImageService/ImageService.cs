@@ -86,7 +86,7 @@ namespace ImageService
         {
             eventLog1.WriteEntry("In OnStart");
 
-            // Update the service state to Start Pending.  
+            // Update the service state to Start Pending.   ^-^
             ServiceStatus serviceStatus = new ServiceStatus
             {
                 dwCurrentState = ServiceState.SERVICE_START_PENDING,
