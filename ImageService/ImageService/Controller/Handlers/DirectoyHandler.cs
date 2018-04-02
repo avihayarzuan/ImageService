@@ -36,7 +36,7 @@ namespace ImageService.Controller.Handlers
 
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            if (e.CommandID == -1)
+            if (e.CommandID == (int)CommandEnum.CloseCommand)
             {
                 HandlerClose();
             }
