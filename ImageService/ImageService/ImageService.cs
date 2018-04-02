@@ -46,7 +46,7 @@ namespace ImageService
     {
         private int eventId = 1;
 
-        private ImageServer m_imageServer;          // The Image Server
+        private ImageServer m_imageServer;          // The Image Server.
 		private IImageServiceModel model;
 		private IImageController controller;
         private ILoggingService logging;
