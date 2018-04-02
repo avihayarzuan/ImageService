@@ -33,12 +33,13 @@ namespace ImageService.Model
             // Get the pictures date time
             DateTime picTime = GetDateTakenFromImage(path);
             // Creating a path for it assuming it exists and for the thumbnail
-            string picFolder = picTime.Month.ToString() + "/" + picTime.Year.ToString();
+            string picFolder = picTime.Year.ToString() + "/" + picTime.Month.ToString();
             Directory.CreateDirectory(m_OutputFolder + "/" + picFolder);
             Directory.CreateDirectory(m_OutputFolder + "/Thumbnails" + picFolder);
             Directory.Move(path, m_OutputFolder + "/" + picFolder);
             // lastly saving the thumbnail
             SaveThumbnail(path, m_OutputFolder + "/Thumbnails" + picFolder);
+            //when and why to set result values????
             result = true;
             return "";
         }

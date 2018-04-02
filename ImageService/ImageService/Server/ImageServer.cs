@@ -29,7 +29,7 @@ namespace ImageService.Server
         {
             m_controller = controller;
             m_logging = logging;
-            handlersPath = handlersPath;
+            this.handlersPath = handlersPath;
 
             for (int i = 0; i < handlersPath.Length; i++)
             {
@@ -39,7 +39,7 @@ namespace ImageService.Server
             }
         }
 
-
+        // should we keep it???
         public void SendCommand()
         {
             
@@ -47,7 +47,6 @@ namespace ImageService.Server
 
         public void CloseServer()
         {
-            
             CommandRecievedEventArgs commandRecEventArgs = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
             CommandRecieved?.Invoke(this, commandRecEventArgs);
             for (int i = 0; i < handlersPath.Length; i++)

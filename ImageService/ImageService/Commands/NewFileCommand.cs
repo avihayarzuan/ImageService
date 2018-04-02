@@ -29,7 +29,7 @@ namespace ImageService.Commands
                 if (!res)
                 {
                     result = false;
-                    strRes = "semek";
+                    strRes = "semek"; //need to check about resukt and more shit
                 }
             }
             return strRes;

@@ -111,8 +111,8 @@ namespace ImageService
             // First reading our app.config
             string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            string sourceName = ConfigurationManager.AppSettings["SourceName"];
-            string logName = ConfigurationManager.AppSettings["LogName"];
+            this.eventLog1.Source = ConfigurationManager.AppSettings["SourceName"];
+            this.eventLog1.Log = ConfigurationManager.AppSettings["LogName"];
             int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             // Initializing and creating our members
             this.model = new ImageServiceModel(outputDir, thumbnailSize);

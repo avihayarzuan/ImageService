@@ -49,7 +49,7 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = false;
                 watcher.Dispose();
             }
-
+            // some one can explain me this???????
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path ,"dir" + m_path + "directory closed"));
         }
 
