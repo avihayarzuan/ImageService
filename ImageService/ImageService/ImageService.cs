@@ -46,7 +46,7 @@ namespace ImageService
     {
         private int eventId = 1;
 
-        private ImageServer m_imageServer;          // The Image Server.
+        private ImageServer m_imageServer;          // The Image Server
 		private IImageServiceModel model;
 		private IImageController controller;
         private ILoggingService logging;
@@ -84,41 +84,20 @@ namespace ImageService
 		// Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("In OnStart");
-
-            // Update the service state to Start Pending.
-            ServiceStatus serviceStatus = new ServiceStatus
-            {
-                dwCurrentState = ServiceState.SERVICE_START_PENDING,
-                dwWaitHint = 100000
-            };
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-            // Set up a timer to trigger every minute.  
-            System.Timers.Timer timer = new System.Timers.Timer
-            {
-                Enabled = true,
-                Interval = 60000 // 60 seconds  
-            };
-            timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
-            timer.Start();
-
-            // Update the service state to Running.  
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            eventLog1.WriteEntry("StartingImageService");
+            InitializeService();            
         }
 
         protected override void OnStop()
         {
-            eventLog1.WriteEntry("In onStop");
+            eventLog1.WriteEntry("Stopping ImageService");
+            this.m_imageServer.CloseServer();
         }
 
         protected override void OnContinue()
         {
             base.OnContinue();
         }
-
-        //private void OnMessage() ???
 
         private void InitializeComponent()
         {
@@ -127,9 +106,19 @@ namespace ImageService
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
         }
 
-        public void OnTimer(object sender, ElapsedEventArgs eeArgs)
+        private void InitializeService()
         {
-            eventLog1.WriteEntry("Monitor OnTimer", EventLogEntryType.Information, eventId++);
+            // First reading our app.config
+            string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
+            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            string sourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
+            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+            // Initializing and creating our members
+            this.model = new ImageServiceModel(outputDir, thumbnailSize);
+            this.controller = new ImageController(this.model);
+            this.logging = new LoggingService();
+            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
         }
     }
 }

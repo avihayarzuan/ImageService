@@ -16,6 +16,8 @@ namespace ImageService.Server
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
+        private List<IDirectoryHandler> handlers;
+        private string[] handlersPath;
         #endregion
 
         #region Properties
@@ -27,19 +29,17 @@ namespace ImageService.Server
         {
             m_controller = controller;
             m_logging = logging;
-            
+            handlersPath = handlersPath;
+
             for (int i = 0; i < handlersPath.Length; i++)
             {
-                CreateHandler(handlersPath[i]);
+                handlers.Add(new DirectoyHandler(this.m_controller, this.m_logging));
+                handlers[i].StartHandleDirectory(handlersPath[i]);
                 m_logging.Log("Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
         }
 
-        public void CreateHandler(string dirPath)
-        {
 
-        }
-       
         public void SendCommand()
         {
             
@@ -47,7 +47,13 @@ namespace ImageService.Server
 
         public void CloseServer()
         {
-
+            
+            CommandRecievedEventArgs commandRecEventArgs = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
+            CommandRecieved?.Invoke(this, commandRecEventArgs);
+            for (int i = 0; i < handlersPath.Length; i++)
+            {
+                m_logging.Log("Handler stopped at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
+            }
         }
 
     }
