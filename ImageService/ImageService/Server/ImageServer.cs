@@ -19,9 +19,36 @@ namespace ImageService.Server
         #endregion
 
         #region Properties
-        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
+        // The event that notifies about a new Command being recieved
+        public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          
         #endregion
 
+        public ImageServer(IImageController controller, ILoggingService logging, string[] handlersPath)
+        {
+            m_controller = controller;
+            m_logging = logging;
+
+            for (int i = 0; i < handlersPath.Length; i++)
+            {
+                CreateHandler(handlersPath[i]);
+                m_logging.Log("Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
+            }
+        }
+
+        public void CreateHandler(string dirPath)
+        {
+
+        }
        
+        public void SendCommand()
+        {
+            
+        }
+
+        public void CloseServer()
+        {
+
+        }
+
     }
 }
