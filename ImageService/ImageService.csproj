@@ -63,25 +63,25 @@
     <Compile Include="ImageService\Model\Event\DirectoryCloseEventArgs.cs" />
     <Compile Include="ImageService\Model\IImageServiceModel.cs" />
     <Compile Include="ImageService\Model\ImageServiceModel.cs" />
-    <Compile Include="ImageService\Server\ImageServer.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="ProjectInstaller.cs">
+    <Compile Include="ImageService\Program.cs" />
+    <Compile Include="ImageService\ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProjectInstaller.Designer.cs">
+    <Compile Include="ImageService\ProjectInstaller.designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageService\Server\ImageServer.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="ImageService\App.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ImageService\ImageService.resx">
       <DependentUpon>ImageService.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProjectInstaller.resx">
+    <EmbeddedResource Include="ImageService\ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
