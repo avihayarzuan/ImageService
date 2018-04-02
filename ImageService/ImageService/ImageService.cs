@@ -49,8 +49,8 @@ namespace ImageService
         private ImageServer m_imageServer;          // The Image Server
 		private IImageServiceModel model;
 		private IImageController controller;
-        private EventLog eventLog1;
         private ILoggingService logging;
+        private EventLog eventLog1;
 
         //constructor of ImageServer
         //need to put here parsing from appconfig

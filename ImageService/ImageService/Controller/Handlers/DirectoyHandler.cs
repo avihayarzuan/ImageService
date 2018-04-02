@@ -16,24 +16,70 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
+        //test
         private IImageController m_controller;              // The Image Processing Controller
         private ILoggingService m_logging;
-        private FileSystemWatcher m_dirWatcher;             // The Watcher of the Dir
+        //private FileSystemWatcher m_dirWatcher;             // The Watcher of the Dir
+        private List<FileSystemWatcher> m_listWatchers = new List<FileSystemWatcher>();
         private string m_path;                              // The Path of directory
-        #endregion
 
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
+        #endregion
+        
+        // The Event That Notifies that the Directory is being closed
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              
+
+        public DirectoyHandler(IImageController controller, ILoggingService logging)
+        {
+            m_controller = controller;
+            m_logging = logging;
+        }
 
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.CommandID == -1)
+            {
+                HandlerClose();
+            }
+        }
+
+        public void HandlerClose()
+        {
+
         }
 
         public void StartHandleDirectory(string dirPath)
         {
-            throw new NotImplementedException();
+            string[] filters = { "*.jpg", "*.png", "*.gif" ,"*.bmp"};
+            //List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
+            foreach(string f in filters)
+            {
+                FileSystemWatcher watcher = new FileSystemWatcher
+                {
+                    Filter = f,
+                    Path = dirPath
+                };
+                watcher.Created += new FileSystemEventHandler(OnCreated);
+                watcher.EnableRaisingEvents = true;
+                this.m_listWatchers.Add(watcher);
+                m_logging.Log("watcher added", MessageTypeEnum.INFO);
+            }
+
         }
 
-        // Implement Here!
+        private void OnCreated(object sender, FileSystemEventArgs e)
+        {
+            string[] path = { e.FullPath };
+            string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
+            if (result)
+            {
+                m_logging.Log("file in new path:" + msg, MessageTypeEnum.INFO);
+            }
+            else
+            {
+                m_logging.Log("could not move new file. reason: ", MessageTypeEnum.FAIL);
+            }
+
+        }
+
     }
 }
