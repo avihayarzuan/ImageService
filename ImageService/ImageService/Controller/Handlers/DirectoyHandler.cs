@@ -44,7 +44,13 @@ namespace ImageService.Controller.Handlers
 
         public void HandlerClose()
         {
+            foreach (FileSystemWatcher watcher in m_listWatchers)
+            {
+                watcher.EnableRaisingEvents = false;
+                watcher.Dispose();
+            }
 
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path ,"dir" + m_path + "directory closed"));
         }
 
         public void StartHandleDirectory(string dirPath)

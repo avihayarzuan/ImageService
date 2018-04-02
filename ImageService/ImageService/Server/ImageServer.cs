@@ -27,7 +27,7 @@ namespace ImageService.Server
         {
             m_controller = controller;
             m_logging = logging;
-
+            
             for (int i = 0; i < handlersPath.Length; i++)
             {
                 CreateHandler(handlersPath[i]);
