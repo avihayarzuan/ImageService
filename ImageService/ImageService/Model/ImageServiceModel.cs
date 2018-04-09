@@ -33,13 +33,15 @@ namespace ImageService.Model
             // Get the pictures date time
             DateTime picTime = GetDateTakenFromImage(path);
             // Creating a path for it assuming it exists and for the thumbnail
-            string picFolder = picTime.Year.ToString() + "/" + picTime.Month.ToString();
-            Directory.CreateDirectory(m_OutputFolder + "/" + picFolder);
-            Directory.CreateDirectory(m_OutputFolder + "/Thumbnails" + picFolder);
-            Directory.Move(path, m_OutputFolder + "/" + picFolder);
+            string picFolder = picTime.Year.ToString() + "\\" + picTime.Month.ToString();
+            Directory.CreateDirectory(m_OutputFolder + "\\" + picFolder);
+            Directory.CreateDirectory(m_OutputFolder + "\\Thumbnails" + picFolder);
+            //NEED TO CHECK IF EXISTS
+            File.Move(path, m_OutputFolder + "\\" + picFolder);
             // lastly saving the thumbnail
-            SaveThumbnail(path, m_OutputFolder + "/Thumbnails" + picFolder);
+            SaveThumbnail(path, m_OutputFolder + "\\Thumbnails" + picFolder);
             //when and why to set result values????
+            // need to add exeptions
             result = true;
             return "";
         }
@@ -50,6 +52,7 @@ namespace ImageService.Model
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromStream(fs, false, false))
             {
+                //handle exception here:::
                 System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
                 string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
                 return DateTime.Parse(dateTaken);
