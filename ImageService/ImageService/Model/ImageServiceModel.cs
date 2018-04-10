@@ -39,15 +39,14 @@ namespace ImageService.Model
             Directory.CreateDirectory(picDest);
             Directory.CreateDirectory(thumbDest);
 
-            //string[] splitedPath = path.Split('\\');
-            //string imageName = splitedPath[splitedPath.Length];
+            string[] splitedPath = path.Split('\\');
+            string imageName = splitedPath[splitedPath.Length-1];
             //string imagePath = m_OutputFolder + "\\" + picFolder + "\\" + imageName;
 
             //NEED TO CHECK IF EXISTS
-
-            File.Move(path, picDest);
+            SaveThumbnail(path,Path.Combine(thumbDest, imageName));
+            File.Move(path, Path.Combine(picDest,imageName));
             // lastly saving the thumbnail
-            SaveThumbnail(path, m_OutputFolder + "\\Thumbnails" + picFolder);
             // need to add exeptions
             result = true;
             return "";
@@ -72,7 +71,7 @@ namespace ImageService.Model
             Image myImage = Image.FromFile(path);
             Image thumb = myImage.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
             thumb.Save(destDir);
-            thumb.Dispose();
+            myImage.Dispose();
         }
 
     }
