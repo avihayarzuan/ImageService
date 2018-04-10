@@ -30,26 +30,35 @@ namespace ImageService.Model
 
         public string AddFile(string path, out bool result)
         {
-            // Get the pictures date time
-            DateTime picTime = GetDateTakenFromImage(path);
-            string picFolder = Path.Combine(picTime.Year.ToString(), picTime.Month.ToString());
-            string picDest = Path.Combine(m_OutputFolder, picFolder);
-            string thumbDest = Path.Combine(m_OutputFolder, "thumbnails", picFolder);
-            // Creating a path for it assuming it exists and for the thumbnail
-            Directory.CreateDirectory(picDest);
-            Directory.CreateDirectory(thumbDest);
+            try
+            {
+                // Get the pictures date time
+                DateTime picTime = GetDateTakenFromImage(path);
+                string imageName = Path.GetFileName(path);
+                string picFolder = Path.Combine(picTime.Year.ToString(), picTime.Month.ToString());
+                string picDestFolder = Path.Combine(m_OutputFolder, picFolder);
+                string thumbFolderDest = Path.Combine(m_OutputFolder, "thumbnails", picFolder);
+                // Creating a folder for our picture and thumbnail
+                Directory.CreateDirectory(picDestFolder);
+                Directory.CreateDirectory(thumbFolderDest);
+                // If the file already exists we'll give it a new name
+                if (File.Exists(Path.Combine(picDestFolder, imageName)))
+                {
+                    imageName = duplicateFile(picDestFolder, imageName);
+                }
+                // Lastly saving our created thumbnail and moving our image
+                SaveThumbnail(path, Path.Combine(thumbFolderDest, imageName));
+                File.Move(path, Path.Combine(picDestFolder, imageName));
 
-            string[] splitedPath = path.Split('\\');
-            string imageName = splitedPath[splitedPath.Length-1];
-            //string imagePath = m_OutputFolder + "\\" + picFolder + "\\" + imageName;
-
-            //NEED TO CHECK IF EXISTS
-            SaveThumbnail(path,Path.Combine(thumbDest, imageName));
-            File.Move(path, Path.Combine(picDest,imageName));
-            // lastly saving the thumbnail
-            // need to add exeptions
-            result = true;
-            return "";
+                result = true;
+                return Path.Combine(picDestFolder, imageName);
+            }
+            catch (Exception msg)
+            {
+                result = false;
+                return msg.ToString();
+            }
+            
         }
 
         //retrieves the datetime WITHOUT loading the whole image
@@ -58,7 +67,6 @@ namespace ImageService.Model
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromStream(fs, false, false))
             {
-                //handle exception here:::
                 System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
                 string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
                 return DateTime.Parse(dateTaken);
@@ -73,6 +81,18 @@ namespace ImageService.Model
             thumb.Save(destDir);
             myImage.Dispose();
         }
+
+        private string duplicateFile(string folder, string imageName)
+        {
+            int i = 1;
+            // As long as the file exists we'll rename it 
+            while (File.Exists(Path.Combine(folder, imageName)))
+            {
+                imageName = imageName + "(" + i.ToString() + ")";
+                i++;
+            }
+            return imageName;
+        } 
 
     }
 }

@@ -86,7 +86,7 @@ namespace ImageService
 
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("Starting Image Service");
+            eventLog1.WriteEntry("Starting ImageService");
             InitializeService();
         }
 
@@ -98,12 +98,24 @@ namespace ImageService
 
        public void OnLog(object sender, MessageRecievedEventArgs e)
         {
-            //ADD SWITCH
-            eventLog1.WriteEntry(e.Message, EventLogEntryType.Information, eventId++);
+            // Updating our log according to the message status
+            switch (e.Status)
+            {
+                case MessageTypeEnum.INFO:
+                    eventLog1.WriteEntry(e.Message, EventLogEntryType.Information, eventId++);
+                    break;
+                case MessageTypeEnum.FAIL:
+                    eventLog1.WriteEntry(e.Message, EventLogEntryType.FailureAudit, eventId++);
+                    break;
+                case MessageTypeEnum.WARNING:
+                    eventLog1.WriteEntry(e.Message, EventLogEntryType.Warning, eventId++);
+                    break;
+            }
         }
 
         private void InitializeComponent()
         {
+            // Initializing our eventLog
             this.eventLog1 = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
@@ -114,17 +126,13 @@ namespace ImageService
             // First reading our app.config
             string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
-            
-            eventLog1.WriteEntry(outputDir);
-            eventLog1.WriteEntry(thumbnailSize.ToString());
+            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);  
             // Initializing and creating our members
             this.model = new ImageServiceModel(outputDir, thumbnailSize);
             this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
-
             eventLog1.WriteEntry("End Initialializing");
         }
     }
