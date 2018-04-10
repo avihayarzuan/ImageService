@@ -9,7 +9,7 @@ namespace ImageService.Logging
 {
     public class LoggingService : ILoggingService
     {
-        public LoggingService() { }
+        //public LoggingService() { }
 
         public event EventHandler<MessageRecievedEventArgs> MessageRecieved;
 

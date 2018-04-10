@@ -59,6 +59,7 @@ namespace ImageService.Controller.Handlers
 
         public void StartHandleDirectory(string dirPath)
         {
+            m_path = dirPath;
             string[] filters = { "*.jpg", "*.png", "*.gif" ,"*.bmp"};
             //List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
             foreach(string f in filters)
@@ -71,6 +72,7 @@ namespace ImageService.Controller.Handlers
                 watcher.Created += new FileSystemEventHandler(OnCreated);
                 watcher.EnableRaisingEvents = true;
                 this.m_listWatchers.Add(watcher);
+                //add where was added???
                 m_logging.Log("watcher added", MessageTypeEnum.INFO);
             }
 
