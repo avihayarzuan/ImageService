@@ -44,7 +44,7 @@ namespace ImageService.Model
                 // If the file already exists we'll give it a new name
                 if (File.Exists(Path.Combine(picDestFolder, imageName)))
                 {
-                    imageName = duplicateFile(picDestFolder, imageName);
+                    imageName = DuplicateFile(picDestFolder, imageName);
                 }
                 // Lastly saving our created thumbnail and moving our image
                 SaveThumbnail(path, Path.Combine(thumbFolderDest, imageName));
@@ -82,7 +82,7 @@ namespace ImageService.Model
             myImage.Dispose();
         }
 
-        private string duplicateFile(string folder, string imageName)
+        private string DuplicateFile(string folder, string imageName)
         {
             int i = 1;
             // As long as the file exists we'll rename it 

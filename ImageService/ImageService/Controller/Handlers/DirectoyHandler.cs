@@ -60,37 +60,44 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             m_path = dirPath;
-            string[] filters = { "*.jpg", "*.png", "*.gif" ,"*.bmp"};
-            //List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
-            foreach(string f in filters)
-            {
+            //string[] filters = { "*.jpg", "*.png", "*.gif" ,"*.bmp"};
+            //foreach(string f in filters)
+            ////List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
+            //{
+            //}
                 FileSystemWatcher watcher = new FileSystemWatcher
                 {
-                    Filter = f,
+                    //Filter = "*.",
                     Path = dirPath
                 };
                 watcher.Created += new FileSystemEventHandler(OnCreated);
                 watcher.EnableRaisingEvents = true;
                 this.m_listWatchers.Add(watcher);
                 //add where was added???
-                m_logging.Log(f + " watcher added in " + dirPath, MessageTypeEnum.INFO);
-            }
+                m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
 
         }
 
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
             string[] path = { e.FullPath };
-            string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
-            if (result)
+            string extension = Path.GetExtension(e.FullPath);
+            string[] filters = { "jpg", "png", "gif", "bmp" };
+            foreach (string f in filters)
             {
-                m_logging.Log("file in new path:" + msg, MessageTypeEnum.INFO);
+                if (extension == f)
+                {
+                    string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
+                    if (result)
+                    {
+                        m_logging.Log("file in new path:" + msg, MessageTypeEnum.INFO);
+                    }
+                    else
+                    {
+                        m_logging.Log("could not move new file. reason: ", MessageTypeEnum.FAIL);
+                    }
+                }
             }
-            else
-            {
-                m_logging.Log("could not move new file. reason: ", MessageTypeEnum.FAIL);
-            }
-
         }
 
     }
