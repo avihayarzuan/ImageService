@@ -30,16 +30,13 @@ namespace ImageService.Server
             m_controller = controller;
             m_logging = logging;
             handlers = new List<IDirectoryHandler>();
-            m_logging.Log("5", Logging.Model.MessageTypeEnum.INFO);
             this.handlersPath = handlersPath;
-            m_logging.Log("6", Logging.Model.MessageTypeEnum.INFO);
             for (int i = 0; i < handlersPath.Length; i++)
             {
                 handlers.Add(new DirectoyHandler(this.m_controller, this.m_logging));
                 handlers[i].StartHandleDirectory(handlersPath[i]);
-                m_logging.Log("Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
+                m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
-            m_logging.Log("7", Logging.Model.MessageTypeEnum.INFO);
         }
 
         // should we keep it???

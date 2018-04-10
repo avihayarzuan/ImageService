@@ -73,7 +73,7 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = true;
                 this.m_listWatchers.Add(watcher);
                 //add where was added???
-                m_logging.Log("watcher added", MessageTypeEnum.INFO);
+                m_logging.Log(f + " watcher added in " + dirPath, MessageTypeEnum.INFO);
             }
 
         }
