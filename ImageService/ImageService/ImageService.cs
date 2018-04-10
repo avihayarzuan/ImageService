@@ -94,6 +94,7 @@ namespace ImageService
         {
             eventLog1.WriteEntry("Stopping ImageService");
             this.m_imageServer.CloseServer();
+            //////// need to add +=close handler!!!!!
         }
 
        public void OnLog(object sender, MessageRecievedEventArgs e)

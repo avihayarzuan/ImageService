@@ -10,6 +10,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace ImageService.Controller.Handlers
 {
@@ -82,11 +83,12 @@ namespace ImageService.Controller.Handlers
         {
             string[] path = { e.FullPath };
             string extension = Path.GetExtension(e.FullPath);
-            string[] filters = { "jpg", "png", "gif", "bmp" };
+            string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
             foreach (string f in filters)
             {
-                if (extension == f)
+                if (extension.Equals(f,StringComparison.InvariantCultureIgnoreCase))
                 {
+                    Thread.Sleep(1000);
                     string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
                     if (result)
                     {
@@ -94,7 +96,7 @@ namespace ImageService.Controller.Handlers
                     }
                     else
                     {
-                        m_logging.Log("could not move new file. reason: ", MessageTypeEnum.FAIL);
+                        m_logging.Log("could not move new file. reason: " + msg, MessageTypeEnum.FAIL);
                     }
                 }
             }

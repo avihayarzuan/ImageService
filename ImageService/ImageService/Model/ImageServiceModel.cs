@@ -48,8 +48,9 @@ namespace ImageService.Model
                     destPath = DuplicateFile(destPath);
                 }
                 // Lastly saving our created thumbnail and moving our image
-                SaveThumbnail(path, Path.Combine(thumbFolderDest, imageName));
+                Thread.Sleep(100);
                 File.Move(path, destPath);
+                SaveThumbnail(destPath, Path.Combine(thumbFolderDest, imageName));
 
                 result = true;
                 return destPath;
@@ -57,7 +58,7 @@ namespace ImageService.Model
             catch (Exception msg)
             {
                 result = false;
-                return msg.ToString();
+                return msg.Message;
             }
             
         }
@@ -93,9 +94,9 @@ namespace ImageService.Model
             while (File.Exists(path))
             {
                 imageName = imageName + "(" + i.ToString() + ")";
+                path = Path.Combine(pathFolder, imageName + extension);
                 i++;
             }
-            path = Path.Combine(pathFolder, imageName + extension);
             return path;
         } 
 

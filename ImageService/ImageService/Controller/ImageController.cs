@@ -36,6 +36,7 @@ namespace ImageService.Controller
                     return "Command not found";
                 }
                 ICommand command = commands[commandID];
+                
                 return command.Execute(args, out resultSuccesful);
             }
             ////resultSuccesful = true;
