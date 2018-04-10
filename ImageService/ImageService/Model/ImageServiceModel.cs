@@ -36,8 +36,20 @@ namespace ImageService.Model
             string picFolder = picTime.Year.ToString() + "\\" + picTime.Month.ToString();
             Directory.CreateDirectory(m_OutputFolder + "\\" + picFolder);
             Directory.CreateDirectory(m_OutputFolder + "\\Thumbnails" + picFolder);
+
+            string[] splitedPath = path.Split('\\');
+            string imageName = splitedPath[splitedPath.Length];
+            string imagePath = m_OutputFolder + "\\"  + picFolder + "\\"  + imageName;
+
             //NEED TO CHECK IF EXISTS
-            File.Move(path, m_OutputFolder + "\\" + picFolder);
+            //if (File.Exists(imagePath))
+            //{
+                
+            //}
+
+            
+
+            File.Move(path, m_OutputFolder);
             // lastly saving the thumbnail
             SaveThumbnail(path, m_OutputFolder + "\\Thumbnails" + picFolder);
             //when and why to set result values????
@@ -65,6 +77,7 @@ namespace ImageService.Model
             Image myImage = Image.FromFile(path);
             Image thumb = myImage.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
             thumb.Save(destDir);
+            thumb.Dispose();
         }
 
     }
