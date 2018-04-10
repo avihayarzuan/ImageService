@@ -122,20 +122,17 @@ namespace ImageService
             string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
             int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
-            eventLog1.WriteEntry("ghj");
+            
             eventLog1.WriteEntry(outputDir);
             eventLog1.WriteEntry(thumbnailSize.ToString());
             // Initializing and creating our members
             this.model = new ImageServiceModel(outputDir, thumbnailSize);
-            eventLog1.WriteEntry("1");
             this.controller = new ImageController(this.model);
-            eventLog1.WriteEntry("2");
             this.logging = new LoggingService();
-            eventLog1.WriteEntry("4");
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
 
-            eventLog1.WriteEntry("end initialializing");
+            eventLog1.WriteEntry("End Initialializing");
         }
     }
 }
