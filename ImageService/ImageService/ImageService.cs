@@ -41,7 +41,7 @@ namespace ImageService
         public int dwCheckPoint;
         public int dwWaitHint;
     };
-
+    ///
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
@@ -99,14 +99,6 @@ namespace ImageService
         protected override void OnContinue()
         {
             base.OnContinue();
-        }
-
-        public void OnLog(object sender, MessageRecievedEventArgs e)
-        {
-            //switch
-            eventLog1.WriteEntry(e.Message, EventLogEntryType.Information, eventId++);
-
-            
         }
 
         private void InitializeComponent()
