@@ -33,7 +33,11 @@ namespace ImageService.Controller.Handlers
             m_controller = controller;
             m_logging = logging;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             if (e.CommandID == (int)CommandEnum.CloseCommand)

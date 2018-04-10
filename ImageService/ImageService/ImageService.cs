@@ -41,7 +41,7 @@ namespace ImageService
         public int dwCheckPoint;
         public int dwWaitHint;
     };
-
+    ///
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
@@ -92,11 +92,6 @@ namespace ImageService
         {
             eventLog1.WriteEntry("Stopping ImageService");
             this.m_imageServer.CloseServer();
-        }
-
-        protected override void OnContinue()
-        {
-            base.OnContinue();
         }
 
         private void InitializeComponent()
