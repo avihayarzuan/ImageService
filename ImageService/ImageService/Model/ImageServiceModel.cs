@@ -32,27 +32,22 @@ namespace ImageService.Model
         {
             // Get the pictures date time
             DateTime picTime = GetDateTakenFromImage(path);
+            string picFolder = Path.Combine(picTime.Year.ToString(), picTime.Month.ToString());
+            string picDest = Path.Combine(m_OutputFolder, picFolder);
+            string thumbDest = Path.Combine(m_OutputFolder, "thumbnails", picFolder);
             // Creating a path for it assuming it exists and for the thumbnail
-            string picFolder = picTime.Year.ToString() + "\\" + picTime.Month.ToString();
-            Directory.CreateDirectory(m_OutputFolder + "\\" + picFolder);
-            Directory.CreateDirectory(m_OutputFolder + "\\Thumbnails" + picFolder);
+            Directory.CreateDirectory(picDest);
+            Directory.CreateDirectory(thumbDest);
 
-            string[] splitedPath = path.Split('\\');
-            string imageName = splitedPath[splitedPath.Length];
-            string imagePath = m_OutputFolder + "\\"  + picFolder + "\\"  + imageName;
+            //string[] splitedPath = path.Split('\\');
+            //string imageName = splitedPath[splitedPath.Length];
+            //string imagePath = m_OutputFolder + "\\" + picFolder + "\\" + imageName;
 
             //NEED TO CHECK IF EXISTS
-            //if (File.Exists(imagePath))
-            //{
-                
-            //}
 
-            
-
-            File.Move(path, m_OutputFolder);
+            File.Move(path, picDest);
             // lastly saving the thumbnail
             SaveThumbnail(path, m_OutputFolder + "\\Thumbnails" + picFolder);
-            //when and why to set result values????
             // need to add exeptions
             result = true;
             return "";

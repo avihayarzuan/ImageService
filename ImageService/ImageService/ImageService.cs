@@ -96,9 +96,10 @@ namespace ImageService
             this.m_imageServer.CloseServer();
         }
 
-        protected override void OnContinue()
+       public void OnLog(object sender, MessageRecievedEventArgs e)
         {
-            base.OnContinue();
+            //ADD SWITCH
+            eventLog1.WriteEntry(e.Message, EventLogEntryType.Information, eventId++);
         }
 
         private void InitializeComponent()
