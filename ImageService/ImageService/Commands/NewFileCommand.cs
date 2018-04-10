@@ -25,10 +25,10 @@ namespace ImageService.Commands
             string strRes = args[0];
             // Going over each new file, adding it
             foreach(string str in args) {
-                this.m_model.AddFile(str, out bool res);
-                if (!res)
+                this.m_model.AddFile(str, out bool reult);
+                if (!result)
                 {
-                    result = false;
+                    //result = false;
                     strRes = "semek"; //need to check about resukt and more shit
                 }
             }

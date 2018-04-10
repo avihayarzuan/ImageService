@@ -26,14 +26,34 @@ namespace ImageService.Controller
 
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
-            // rememeber to return the correct string blablabla
-            //resultSuccesful = true;
-            if (!commands.ContainsKey(commandID)) {
-                resultSuccesful = false;
-                return "Command not found";
+
+            {
+                // rememeber to return the correct string blablabla
+                //resultSuccesful = true;
+                if (!commands.ContainsKey(commandID))
+                {
+                    resultSuccesful = false;
+                    return "Command not found";
+                }
+                ICommand command = commands[commandID];
+                return command.Execute(args, out resultSuccesful);
             }
-            ICommand command = commands[commandID];
-            return command.Execute(args, out resultSuccesful);
+            ////resultSuccesful = true;
+            //if (!commands.ContainsKey(commandID)) {
+            //    resultSuccesful = false;
+            //    return "Command not found";
+            //}
+
+            ////ICommand command = commands[commandID];
+            //Task<Tuple<string, bool>> executeTask = new Task<Tuple<string, bool>>(() =>
+            //{
+            //    string retVal = commands[commandID].Execute(args, out bool result);
+            //    return Tuple.Create(retVal, result);
+            //});
+
+            //executeTask.Start();
+            //resultSuccesful = executeTask.Result.Item2;
+            //return executeTask.Result.Item1;
         }
     }
 }
