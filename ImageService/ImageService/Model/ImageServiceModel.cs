@@ -34,24 +34,25 @@ namespace ImageService.Model
             {
                 // Get the pictures date time
                 DateTime picTime = GetDateTakenFromImage(path);
-                string imageName = Path.GetFileName(path);
                 string picFolder = Path.Combine(picTime.Year.ToString(), picTime.Month.ToString());
+                string imageName = Path.GetFileName(path);
                 string picDestFolder = Path.Combine(m_OutputFolder, picFolder);
                 string thumbFolderDest = Path.Combine(m_OutputFolder, "thumbnails", picFolder);
+                string destPath = Path.Combine(picDestFolder, imageName);
                 // Creating a folder for our picture and thumbnail
                 Directory.CreateDirectory(picDestFolder);
                 Directory.CreateDirectory(thumbFolderDest);
                 // If the file already exists we'll give it a new name
-                if (File.Exists(Path.Combine(picDestFolder, imageName)))
+                if (File.Exists(destPath))
                 {
-                    imageName = duplicateFile(picDestFolder, imageName);
+                    destPath = DuplicateFile(destPath);
                 }
                 // Lastly saving our created thumbnail and moving our image
                 SaveThumbnail(path, Path.Combine(thumbFolderDest, imageName));
-                File.Move(path, Path.Combine(picDestFolder, imageName));
+                File.Move(path, destPath);
 
                 result = true;
-                return Path.Combine(picDestFolder, imageName);
+                return destPath;
             }
             catch (Exception msg)
             {
@@ -82,16 +83,20 @@ namespace ImageService.Model
             myImage.Dispose();
         }
 
-        private string duplicateFile(string folder, string imageName)
+        private string DuplicateFile(string path)
         {
             int i = 1;
+            string imageName = Path.GetFileNameWithoutExtension(path);
+            string extension = Path.GetExtension(path);
+            string pathFolder = Path.GetDirectoryName(path);
             // As long as the file exists we'll rename it 
-            while (File.Exists(Path.Combine(folder, imageName)))
+            while (File.Exists(path))
             {
                 imageName = imageName + "(" + i.ToString() + ")";
                 i++;
             }
-            return imageName;
+            path = Path.Combine(pathFolder, imageName + extension);
+            return path;
         } 
 
     }
