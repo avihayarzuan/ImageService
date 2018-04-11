@@ -9,10 +9,14 @@ namespace ImageService.Model
     public interface IImageServiceModel
     {
         /// <summary>
-        /// The Function Addes A file to the system
+        /// Adding a new file to our output folder
         /// </summary>
-        /// <param name="path">The Path of the Image from the file</param>
-        /// <returns>Indication if the Addition Was Successful</returns>
+        /// <param name="path">
+        /// The to be added image path
+        /// </param>
+        /// <returns>
+        /// The files new path if successful or an error message
+        /// </returns>
         string AddFile(string path, out bool result);
     }
 }
