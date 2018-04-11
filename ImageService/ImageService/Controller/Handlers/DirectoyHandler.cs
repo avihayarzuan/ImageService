@@ -25,9 +25,9 @@ namespace ImageService.Controller.Handlers
         private string m_path;                              // The Path of directory
 
         #endregion
-        
+
         // The Event That Notifies that the Directory is being closed
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
 
         public DirectoyHandler(IImageController controller, ILoggingService logging)
         {
@@ -55,7 +55,7 @@ namespace ImageService.Controller.Handlers
                 watcher.Dispose();
             }
             // some one can explain me this???????
-            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path ,"dir" + m_path + "directory closed"));
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path, "dir" + m_path + "directory closed"));
         }
 
         public void StartHandleDirectory(string dirPath)
@@ -66,16 +66,17 @@ namespace ImageService.Controller.Handlers
             ////List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
             //{
             //}
-                FileSystemWatcher watcher = new FileSystemWatcher
-                {
-                    //Filter = "*.",
-                    Path = dirPath
-                };
-                watcher.Created += new FileSystemEventHandler(OnCreated);
-                watcher.EnableRaisingEvents = true;
-                this.m_listWatchers.Add(watcher);
-                //add where was added???
-                m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
+            FileSystemWatcher watcher = new FileSystemWatcher
+            {
+                //Filter = "*.",
+                Path = dirPath
+            };
+            watcher.Created += new FileSystemEventHandler(OnCreated);
+            watcher.Changed += new FileSystemEventHandler(OnCreated);
+            watcher.EnableRaisingEvents = true;
+            this.m_listWatchers.Add(watcher);
+            //add where was added???
+            m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
 
         }
 
@@ -86,10 +87,10 @@ namespace ImageService.Controller.Handlers
             string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
             foreach (string f in filters)
             {
-                if (extension.Equals(f,StringComparison.InvariantCultureIgnoreCase))
+                if (extension.Equals(f, StringComparison.InvariantCultureIgnoreCase))
                 {
                     Thread.Sleep(100);
-                    string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
+                    string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path, out bool result);
                     if (result)
                     {
                         m_logging.Log("file in new path:" + msg, MessageTypeEnum.INFO);
