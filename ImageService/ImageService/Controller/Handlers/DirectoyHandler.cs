@@ -88,7 +88,7 @@ namespace ImageService.Controller.Handlers
             {
                 if (extension.Equals(f,StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                     string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path , out bool result);
                     if (result)
                     {

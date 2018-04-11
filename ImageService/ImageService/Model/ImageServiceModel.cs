@@ -34,6 +34,7 @@ namespace ImageService.Model
             {
                 // Get the pictures date time
                 DateTime picTime = GetDateTakenFromImage(path);
+                // Creating strings in order to create our directory
                 string picFolder = Path.Combine(picTime.Year.ToString(), picTime.Month.ToString());
                 string imageName = Path.GetFileName(path);
                 string picDestFolder = Path.Combine(m_OutputFolder, picFolder);
@@ -48,7 +49,6 @@ namespace ImageService.Model
                     destPath = DuplicateFile(destPath);
                 }
                 // Lastly saving our created thumbnail and moving our image
-                Thread.Sleep(100);
                 File.Move(path, destPath);
                 SaveThumbnail(destPath, Path.Combine(thumbFolderDest, imageName));
 
@@ -69,9 +69,17 @@ namespace ImageService.Model
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (Image myImage = Image.FromStream(fs, false, false))
             {
-                System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
-                string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
-                return DateTime.Parse(dateTaken);
+                try
+                {
+                    System.Drawing.Imaging.PropertyItem propItem = myImage.GetPropertyItem(36867);
+                    string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
+                    return DateTime.Parse(dateTaken);
+                } catch
+                {
+                    // Incase the image doesnt have a date we'll return the files date
+                    return File.GetCreationTime(path);
+                }
+                
             }
         }
 
@@ -81,6 +89,7 @@ namespace ImageService.Model
             Image myImage = Image.FromFile(path);
             Image thumb = myImage.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
             thumb.Save(destDir);
+            // Lastly realeasing the image
             myImage.Dispose();
         }
 
