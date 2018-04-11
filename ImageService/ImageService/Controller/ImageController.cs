@@ -12,18 +12,33 @@ namespace ImageService.Controller
 {
     public class ImageController : IImageController
     {
-        private IImageServiceModel m_model;                      // The Model Object
+        private IImageServiceModel m_model; // The Model Object
         private Dictionary<int, ICommand> commands;
 
         public ImageController(IImageServiceModel model)
         {
-            m_model = model;                    // Storing the Model Of The System
+            m_model = model; // Storing the Model Of The System
             commands = new Dictionary<int, ICommand>
             {
                 { (int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) }
             };
         }
 
+        /// <summary>
+        /// Executing our given command using the dictionary
+        /// </summary>
+        /// <param name="commandID">
+        /// The given command enum
+        /// </param>
+        /// <param name="args">
+        /// The given commands arguments
+        /// </param>
+        /// <param name="resultSuccesful">
+        /// Result of the command (successfull or not)
+        /// </param>
+        /// <returns>
+        /// A string with the new path in case of success or a message error
+        /// </returns>
         public string ExecuteCommand(int commandID, string[] args, out bool resultSuccesful)
         {
             {

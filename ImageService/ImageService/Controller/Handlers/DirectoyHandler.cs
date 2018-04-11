@@ -34,11 +34,7 @@ namespace ImageService.Controller.Handlers
             m_controller = controller;
             m_logging = logging;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             if (e.CommandID == (int)CommandEnum.CloseCommand)
@@ -47,6 +43,9 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        /// <summary>
+        /// Closing our handler and the end of the service
+        /// </summary>
         public void HandlerClose()
         {
             foreach (FileSystemWatcher watcher in m_listWatchers)
@@ -54,39 +53,44 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = false;
                 watcher.Dispose();
             }
-            // some one can explain me this???????
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path, "dir" + m_path + "directory closed"));
         }
 
+        /// <summary>
+        /// Starting our handler, watching the given path for new files added
+        /// </summary>
+        /// <param name="dirPath">
+        /// The path for the FileSystemWatcher to watch
+        /// </param>
         public void StartHandleDirectory(string dirPath)
         {
-            m_path = dirPath;
-            //string[] filters = { "*.jpg", "*.png", "*.gif" ,"*.bmp"};
-            //foreach(string f in filters)
-            ////List<FileSystemWatcher> watchers = new List<FileSystemWatcher>();
-            //{
-            //}
-            FileSystemWatcher watcher = new FileSystemWatcher
-            {
-                //Filter = "*.",
-                Path = dirPath
-            };
+            // Creating our watcher and notifying accordingly
+            FileSystemWatcher watcher = new FileSystemWatcher(m_path);
             watcher.Created += new FileSystemEventHandler(OnCreated);
-            watcher.Changed += new FileSystemEventHandler(OnCreated);
             watcher.EnableRaisingEvents = true;
             this.m_listWatchers.Add(watcher);
-            //add where was added???
             m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
 
         }
 
+        /// <summary>
+        /// Invoking this function every time a new file is added to the watched folder
+        /// </summary>
+        /// <param name="sender">
+        /// The invoker
+        /// </param>
+        /// <param name="e">
+        /// Event arguments
+        /// </param>
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
             string[] path = { e.FullPath };
-            string extension = Path.GetExtension(e.FullPath);
             string[] filters = { ".jpg", ".png", ".gif", ".bmp" };
+            string extension = Path.GetExtension(e.FullPath);
+            // Checking if the new file is an image we should handle
             foreach (string f in filters)
             {
+                // If so we'll execute the new fille command and logg approptiatly
                 if (extension.Equals(f, StringComparison.InvariantCultureIgnoreCase))
                 {
                     Thread.Sleep(100);

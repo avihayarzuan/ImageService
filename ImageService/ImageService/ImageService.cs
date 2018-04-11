@@ -46,23 +46,21 @@ namespace ImageService
     {
         private int eventId = 1;
 
-        private ImageServer m_imageServer;          // The Image Server
+        private ImageServer m_imageServer; // The Image Server
 		private IImageServiceModel model;
 		private IImageController controller;
         private ILoggingService logging;
         private EventLog eventLog1;
 
-        //constructor of ImageServer
         
         public ImageService(string[] args)
         {
+            // First reading from the appconfig creating the eventLog
             InitializeComponent();
-            //string eventSourceName = "MySource";
-            //string logName = "MyNewLog";
-
             string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
             string logName = ConfigurationManager.AppSettings["LogName"];
 
+            // Check for arguments
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
@@ -84,9 +82,14 @@ namespace ImageService
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
+        /// <summary>
+        /// Starting our service
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry("Starting ImageService");
+            // Reading from appconfig 
             InitializeService();
         }
 
@@ -96,7 +99,15 @@ namespace ImageService
             this.m_imageServer.CloseServer();
             //////// need to add +=close handler!!!!!
         }
-
+        /// <summary>
+        /// Updating our entry according to the message
+        /// </summary>
+        /// <param name="sender">
+        /// The message sender
+        /// </param>
+        /// <param name="e">
+        /// The events arguments including the message and its type
+        /// </param>
        public void OnLog(object sender, MessageRecievedEventArgs e)
         {
             // Updating our log according to the message status
@@ -134,6 +145,7 @@ namespace ImageService
             this.logging = new LoggingService();
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
+            // Lastly updating our entry
             eventLog1.WriteEntry("End Initialializing");
         }
     }

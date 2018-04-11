@@ -31,18 +31,19 @@ namespace ImageService.Server
             m_logging = logging;
             handlers = new List<IDirectoryHandler>();
             this.handlersPath = handlersPath;
+            // Creating our handlers
             for (int i = 0; i < handlersPath.Length; i++)
             {
                 handlers.Add(new DirectoyHandler(this.m_controller, this.m_logging));
                 handlers[i].StartHandleDirectory(handlersPath[i]);
+                // Logging each handler creation into the entry
                 m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
         }
 
-        // should we keep it???
         public void SendCommand()
         {
-            
+            //
         }
 
         public void CloseServer()
