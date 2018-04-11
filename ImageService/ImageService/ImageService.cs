@@ -97,7 +97,6 @@ namespace ImageService
         {
             eventLog1.WriteEntry("Stopping ImageService");
             this.m_imageServer.CloseServer();
-            //////// need to add +=close handler!!!!!
         }
         /// <summary>
         /// Updating our entry according to the message
@@ -144,6 +143,7 @@ namespace ImageService
             this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
             logging.MessageRecieved += OnLog;
+            
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
             // Lastly updating our entry
             eventLog1.WriteEntry("End Initialializing");

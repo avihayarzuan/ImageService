@@ -20,7 +20,6 @@ namespace ImageService.Controller.Handlers
         //test
         private IImageController m_controller;              // The Image Processing Controller
         private ILoggingService m_logging;
-        //private FileSystemWatcher m_dirWatcher;             // The Watcher of the Dir
         private List<FileSystemWatcher> m_listWatchers = new List<FileSystemWatcher>();
         private string m_path;                              // The Path of directory
 
@@ -53,7 +52,8 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = false;
                 watcher.Dispose();
             }
-            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path, "dir" + m_path + "directory closed"));
+            
+            DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path, "dir " + m_path + " directory closed"));
         }
 
         /// <summary>
@@ -65,12 +65,13 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             // Creating our watcher and notifying accordingly
+            m_path = dirPath;
             FileSystemWatcher watcher = new FileSystemWatcher(m_path);
             watcher.Created += new FileSystemEventHandler(OnCreated);
+            watcher.Changed += new FileSystemEventHandler(OnCreated);
             watcher.EnableRaisingEvents = true;
             this.m_listWatchers.Add(watcher);
             m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
-
         }
 
         /// <summary>
