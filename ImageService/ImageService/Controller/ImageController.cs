@@ -48,7 +48,7 @@ namespace ImageService.Controller
                     return "Command not found";
                 }
                 ICommand command = commands[commandID];
-
+                // Defining thread for moving files
                 Task<Tuple<string, bool>> executeTask = new Task<Tuple<string, bool>>(() =>
                 {
                     string retVal = commands[commandID].Execute(args, out bool result);

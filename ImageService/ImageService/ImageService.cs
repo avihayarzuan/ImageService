@@ -41,18 +41,22 @@ namespace ImageService
         public int dwCheckPoint;
         public int dwWaitHint;
     };
-    ///
+
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
-
         private ImageServer m_imageServer; // The Image Server
-		private IImageServiceModel model;
-		private IImageController controller;
+        private IImageServiceModel model;
+        private IImageController controller;
         private ILoggingService logging;
         private EventLog eventLog1;
 
-        
+        /// <summary>
+        /// Constructor of ImageService class
+        /// </summary>
+        /// <param name="args">
+        /// Optional - strings that contains the SourceName and the LogName
+        /// </param>
         public ImageService(string[] args)
         {
             // First reading from the appconfig creating the eventLog
@@ -107,7 +111,7 @@ namespace ImageService
         /// <param name="e">
         /// The events arguments including the message and its type
         /// </param>
-       public void OnLog(object sender, MessageRecievedEventArgs e)
+        public void OnLog(object sender, MessageRecievedEventArgs e)
         {
             // Updating our log according to the message status
             switch (e.Status)
@@ -124,26 +128,31 @@ namespace ImageService
             }
         }
 
+        /// <summary>
+        /// Initializing the eventLog
+        /// </summary>
         private void InitializeComponent()
         {
-            // Initializing our eventLog
             this.eventLog1 = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
         }
 
+        /// <summary>
+        /// Reading the app.config.
+        /// Initializing and creating members.
+        /// </summary>
         private void InitializeService()
         {
             // First reading our app.config
             string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);  
+            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             // Initializing and creating our members
             this.model = new ImageServiceModel(outputDir, thumbnailSize);
             this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
             logging.MessageRecieved += OnLog;
-            
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
             // Lastly updating our entry
             eventLog1.WriteEntry("End Initialializing");

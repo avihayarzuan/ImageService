@@ -17,23 +17,35 @@ namespace ImageService.Controller.Handlers
     public class DirectoyHandler : IDirectoryHandler
     {
         #region Members
-        //test
         private IImageController m_controller;              // The Image Processing Controller
-        private ILoggingService m_logging;
+        private ILoggingService m_logging;                  // The eventLogger
         private List<FileSystemWatcher> m_listWatchers = new List<FileSystemWatcher>();
         private string m_path;                              // The Path of directory
-
         #endregion
 
         // The Event That Notifies that the Directory is being closed
         public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="controller">
+        /// Image controller
+        /// </param>
+        /// <param name="logging">
+        /// Logging Service
+        /// </param>
         public DirectoyHandler(IImageController controller, ILoggingService logging)
         {
             m_controller = controller;
             m_logging = logging;
         }
-
+        /// <summary>
+        /// Delegate activates when command recieved
+        /// Activate's handleClose function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
             if (e.CommandID == (int)CommandEnum.CloseCommand)
@@ -43,7 +55,7 @@ namespace ImageService.Controller.Handlers
         }
 
         /// <summary>
-        /// Closing our handler and the end of the service
+        /// Closing our handler, the watcher and the end of the service.
         /// </summary>
         public void HandlerClose()
         {
@@ -52,7 +64,7 @@ namespace ImageService.Controller.Handlers
                 watcher.EnableRaisingEvents = false;
                 watcher.Dispose();
             }
-            
+
             DirectoryClose?.Invoke(this, new DirectoryCloseEventArgs(m_path, "dir " + m_path + " directory closed"));
         }
 

@@ -12,7 +12,7 @@ namespace ImageService.Model
         /// Adding a new file to our output folder
         /// </summary>
         /// <param name="path">
-        /// The to be added image path
+        /// The path image to be added.
         /// </param>
         /// <returns>
         /// The files new path if successful or an error message
