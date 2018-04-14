@@ -39,7 +39,7 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "Image backup service by Avihay";
+            this.serviceInstaller1.Description = "Image backup service by Avihay and Uri";
             this.serviceInstaller1.DisplayName = "ImageService Display Name";
             this.serviceInstaller1.ServiceName = "ImageService";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;

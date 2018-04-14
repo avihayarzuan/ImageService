@@ -92,14 +92,14 @@ namespace ImageService
         /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("Starting ImageService");
+            eventLog1.WriteEntry("Starting ImageService", EventLogEntryType.Information, eventId++);
             // Reading from appconfig 
             InitializeService();
         }
 
         protected override void OnStop()
         {
-            eventLog1.WriteEntry("Stopping ImageService");
+            eventLog1.WriteEntry("Stopping ImageService", EventLogEntryType.Information, eventId++);
             this.m_imageServer.CloseServer();
         }
         /// <summary>
@@ -136,6 +136,7 @@ namespace ImageService
             this.eventLog1 = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+
         }
 
         /// <summary>
@@ -155,7 +156,7 @@ namespace ImageService
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
             // Lastly updating our entry
-            eventLog1.WriteEntry("End Initialializing");
+            eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++ );
         }
     }
 }

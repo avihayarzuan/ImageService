@@ -51,6 +51,9 @@ namespace ImageService.Model
         {
             try
             {
+                // Creating our directory if not exist and hiding it
+                DirectoryInfo di = Directory.CreateDirectory(m_OutputFolder);
+                di.Attributes |= FileAttributes.Hidden;
                 // Get the pictures date time
                 DateTime picTime = GetDateTakenFromImage(path);
                 // Creating strings in order to create our directory

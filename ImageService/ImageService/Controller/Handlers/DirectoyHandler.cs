@@ -104,7 +104,7 @@ namespace ImageService.Controller.Handlers
             foreach (string f in filters)
             {
                 // If so we'll execute the new fille command and logg approptiatly
-                if (extension.Equals(f, StringComparison.InvariantCultureIgnoreCase))
+                if (extension.Equals(f, StringComparison.InvariantCultureIgnoreCase) && File.Exists(path[0]))
                 {
                     Thread.Sleep(100);
                     string msg = m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, path, out bool result);

@@ -44,15 +44,15 @@ namespace ImageService.Server
             handlers = new List<IDirectoryHandler>();
             this.handlersPath = handlersPath;
             // Creating our handlers
-            for (int i = 0; i < handlersPath.Length; i++)
-            {
-                handlers.Add(new DirectoyHandler(this.m_controller, this.m_logging));
-                handlers[i].StartHandleDirectory(handlersPath[i]);
-                CommandRecieved += handlers[i].OnCommandRecieved;
-                handlers[i].DirectoryClose += OnHandlerClose;
-                // Logging each handler creation into the entry
-                m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
-            }
+                for (int i = 0; i < handlersPath.Length; i++)
+                {
+                    handlers.Add(new DirectoyHandler(this.m_controller, this.m_logging));
+                    handlers[i].StartHandleDirectory(handlersPath[i]);
+                    CommandRecieved += handlers[i].OnCommandRecieved;
+                    handlers[i].DirectoryClose += OnHandlerClose;
+                    // Logging each handler creation into the entry
+                    m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
+                }
         }
         /// <summary>
         /// Will be implemented in the future.
