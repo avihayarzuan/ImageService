@@ -78,12 +78,19 @@ namespace ImageService.Controller.Handlers
         {
             // Creating our watcher and notifying accordingly
             m_path = dirPath;
+            try
+            {
             FileSystemWatcher watcher = new FileSystemWatcher(m_path);
             watcher.Created += new FileSystemEventHandler(OnCreated);
             watcher.Changed += new FileSystemEventHandler(OnCreated);
             watcher.EnableRaisingEvents = true;
             this.m_listWatchers.Add(watcher);
             m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
+
+            } catch (Exception e)
+            {
+                m_logging.Log("Error creating watcher path: " + dirPath + " message:" + e.Message, MessageTypeEnum.FAIL);
+            }
         }
 
         /// <summary>
