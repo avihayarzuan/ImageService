@@ -144,7 +144,9 @@ namespace ImageService
             this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
             logging.MessageRecieved += OnLog;
-            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths);
+            int port = 8000;
+            IClientHandler ch = new ClientHandler();
+            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths, port, ch);
             // Lastly updating our entry
             eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++ );
         }
