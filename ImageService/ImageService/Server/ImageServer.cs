@@ -21,6 +21,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
+        
         private string[] handlersPath;
 
         private int port;
@@ -45,7 +46,7 @@ namespace ImageService.Server
         /// <param name="handlersPath">
         /// The path the handler needs to 'handle'
         /// </param>
-        public ImageServer(IImageController controller, ILoggingService logging, string[] handlersPath, int port, IClientHandler ch)
+        public ImageServer(IImageController controller, ILoggingService logging, string[] handlersPath, int port)
         {
             m_controller = controller;
             m_logging = logging;
@@ -63,7 +64,7 @@ namespace ImageService.Server
             }
 
             this.port = port;
-            this.ch = ch;
+            this.ch = new ClientHandler(logging);
 
         }
 
