@@ -64,8 +64,8 @@ namespace ImageService.Server
             }
 
             this.port = port;
-            this.ch = new ClientHandler(logging);
-
+            this.ch = new ClientHandler(logging, ref handlers);
+            StartTcp();
         }
 
         public void StartTcp()
@@ -111,7 +111,13 @@ namespace ImageService.Server
         {
             CommandRecievedEventArgs commandRecEventArgs = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
             CommandRecieved?.Invoke(this, commandRecEventArgs);
+            try
+            {
             listener.Stop();
+            } catch (Exception e)
+            {
+                m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+            }
         }
 
         /// <summary>
