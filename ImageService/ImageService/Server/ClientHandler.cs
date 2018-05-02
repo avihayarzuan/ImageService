@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.Controller.Handlers;
 using ImageService.ImageService.Commands;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
@@ -19,13 +20,13 @@ namespace ImageService.Server
         private List<TcpClient> activeClients;
         private ILoggingService m_logging;
 
-        public ClientHandler(ILoggingService logging)
+        public ClientHandler(ILoggingService logging, ref List<IDirectoryHandler> handlers)
         {
             commands = new Dictionary<int, ICommand>
             {
-                { (int)CommandEnum.GetConfigCommand, new ImageService.ImageService.Commands.GetConfigCommand()},
-                { (int)CommandEnum.LogCommand, new ImageService.ImageService.Commands.LogCommand()},
-                { (int)CommandEnum.CloseCommand, new ImageService.ImageService.Commands.CloseCommand()}
+                { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
+                { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
+                { (int)CommandEnum.CloseCommand, new CloseCommand(ref handlers)}
             };
 
             this.activeClients = new List<TcpClient>();

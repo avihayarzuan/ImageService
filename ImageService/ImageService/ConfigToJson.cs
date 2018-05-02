@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +13,20 @@ namespace ImageService.ImageService
     {
         public static string ToJson()
         {
-            JObject configObj = new Jobject();
-            return configObj.toString();
+
+            string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
+            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            string thumbnailSize = ConfigurationManager.AppSettings["ThumbnailSize"];
+            string port = ConfigurationManager.AppSettings["port"];
+
+            JObject configObj = new JObject
+            {
+                ["handlersPaths"] = JsonConvert.SerializeObject(handlerPaths),
+                ["outputDir"] = outputDir,
+                ["thumbnailSize"] = thumbnailSize,
+                ["port"] = port
+            };
+            return configObj.ToString();
         }
-        //string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
-        //string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-        //int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
-        //    // Initializing and creating our members
-        //    this.model = new ImageServiceModel(outputDir, thumbnailSize);
-        //    this.controller = new ImageController(this.model);
-        //    this.logging = new LoggingService();
-        //int port = int.Parse(ConfigurationManager.AppSettings["port"]);
     }
 }

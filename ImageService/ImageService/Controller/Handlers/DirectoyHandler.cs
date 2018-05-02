@@ -93,6 +93,11 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        public string GetPath()
+        {
+            return this.m_path;
+        }
+
         /// <summary>
         /// Invoking this function every time a new file is added to the watched folder
         /// </summary>

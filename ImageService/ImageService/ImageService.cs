@@ -17,7 +17,7 @@ using System.Configuration;
 using ImageService.Infrastructure;
 using System.Timers;
 
-namespace ImageService
+namespace ImageService.ImageService
 {
     public enum ServiceState
     {

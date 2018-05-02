@@ -13,7 +13,8 @@ namespace ImageService.ImageService.Commands
 
         public string Execute(string[] args, out bool result)
         {
-            throw new NotImplementedException();
+            result = true;
+            return ConfigToJson.ToJson();
         }
     }
 }
