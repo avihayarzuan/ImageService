@@ -39,40 +39,55 @@ namespace ImageService.Server
             new Task(() =>
             {
                 using (NetworkStream stream = client.GetStream())
-                using (StreamReader reader = new StreamReader(stream))
-                using (StreamWriter writer = new StreamWriter(stream))
+                using (BinaryReader reader = new BinaryReader(stream))
+                using (BinaryWriter writer = new BinaryWriter(stream))
                 {
-                    string commandLine = reader.ReadLine();
-                    string first_word = commandLine.Split(' ').First();
-                    if (int.TryParse(first_word, out int commandID))
+                    try
                     {
-                        string[] s = { commandLine };
-                        string answer = commands[commandID].Execute(s, out bool result);
-                        try
+                        //string commandLine = reader.ReadLine();
+                        //int num = reader.ReadInt32();
+                        string commandLine = reader.ReadString();
+                        m_logging.Log(commandLine, Logging.Model.MessageTypeEnum.INFO);
+                        //Console.WriteLine(commandLine);
+                        string first_word = commandLine.Split(' ').First();
+                        Console.WriteLine(first_word);
+                        if (int.TryParse(first_word, out int commandID))
                         {
-                            writer.Write(answer);
-                        } catch (Exception e)
+                            string[] s = { commandLine };
+                            string answer = commands[commandID].Execute(s, out bool result);
+                            try
+                            {
+                                m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
+                                writer.Write(answer);
+                            }
+                            catch (Exception e)
+                            {
+                                m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                                this.activeClients.Remove(client);
+                            }
+                        }
+                        else
                         {
-                            m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-                            this.activeClients.Remove(client);
+                            try
+                            {
+                                writer.Write("Error in commandID");
+                                m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
+                            }
+                            catch (Exception e)
+                            {
+                                m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                                this.activeClients.Remove(client);
+                            }
                         }
                     }
-                    else
+                    catch (Exception e)
                     {
-                        try
-                        {
-                            writer.Write("Error in commandID");
-                            m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
-                        }
-                        catch (Exception e)
-                        {
-                            m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-                            this.activeClients.Remove(client);
-                        }
+                        m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                        this.activeClients.Remove(client);
                     }
                     //string result = commandLine.ex;
                 }
-                client.Close();
+                //client.Close();
             }).Start();
         }
     }
