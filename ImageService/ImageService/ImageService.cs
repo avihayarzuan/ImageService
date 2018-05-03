@@ -17,7 +17,7 @@ using System.Configuration;
 using ImageService.Infrastructure;
 using System.Timers;
 
-namespace ImageService
+namespace ImageService.ImageService
 {
     public enum ServiceState
     {
@@ -143,10 +143,10 @@ namespace ImageService
             this.model = new ImageServiceModel(outputDir, thumbnailSize);
             this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
+            int port = int.Parse(ConfigurationManager.AppSettings["port"]);
+            
             logging.MessageRecieved += OnLog;
-            int port = 8000;
-            IClientHandler ch = new ClientHandler();
-            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths, port, ch);
+            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths, port);
             // Lastly updating our entry
             eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++ );
         }
