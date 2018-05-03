@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.ImageService.Commands;
 using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
@@ -14,13 +15,17 @@ namespace ImageService.Controller
     {
         private IImageServiceModel m_model; // The Model Object
         private Dictionary<int, ICommand> commands;
+        //public event EventHandler<CommandRecievedEventArgs> CommandRecieved;
 
-        public ImageController(IImageServiceModel model)
+        public ImageController(IImageServiceModel model, ref EventHandler<CommandRecievedEventArgs> ComRec)
         {
             m_model = model; // Storing the Model Of The System
             commands = new Dictionary<int, ICommand>
             {
-                { (int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) }
+                { (int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) },
+                { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
+                { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
+                { (int)CommandEnum.CloseCommand, new CloseCommand(ref ComRec)}
             };
         }
 

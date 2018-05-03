@@ -6,6 +6,7 @@ using ImageService.Logging;
 using ImageService.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -21,7 +22,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
-        
+
         private string[] handlersPath;
 
         private int port;
@@ -46,12 +47,17 @@ namespace ImageService.Server
         /// <param name="handlersPath">
         /// The path the handler needs to 'handle'
         /// </param>
-        public ImageServer(IImageController controller, ILoggingService logging, string[] handlersPath, int port)
+        public ImageServer(ILoggingService logging)
         {
-            m_controller = controller;
+            this.handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
+            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+            this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
+
+            m_controller = new ImageController(new ImageServiceModel(outputDir, thumbnailSize), ref CommandRecieved);
             m_logging = logging;
             handlers = new List<IDirectoryHandler>();
-            this.handlersPath = handlersPath;
+            //this.handlersPath = handlersPath;
             // Creating our handlers
             for (int i = 0; i < handlersPath.Length; i++)
             {
@@ -63,8 +69,8 @@ namespace ImageService.Server
                 m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
 
-            this.port = port;
-            this.ch = new ClientHandler(logging, ref handlers);
+            //this.port = port;
+            this.ch = new ClientHandler(this.m_controller, logging);
             StartTcp();
         }
 
@@ -83,6 +89,7 @@ namespace ImageService.Server
                     {
                         TcpClient client = listener.AcceptTcpClient();
                         m_logging.Log("Got new connection", Logging.Model.MessageTypeEnum.INFO);
+
                         ch.HandleClient(client);
                     }
                     catch (SocketException)
@@ -109,12 +116,13 @@ namespace ImageService.Server
         /// </summary>
         public void CloseServer()
         {
-            CommandRecievedEventArgs commandRecEventArgs = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
-            CommandRecieved?.Invoke(this, commandRecEventArgs);
+            CommandRecievedEventArgs ev = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, "*");
+            CommandRecieved?.Invoke(this, ev);
             try
             {
-            listener.Stop();
-            } catch (Exception e)
+                listener.Stop();
+            }
+            catch (Exception e)
             {
                 m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
             }

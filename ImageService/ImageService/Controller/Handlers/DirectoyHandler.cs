@@ -48,7 +48,8 @@ namespace ImageService.Controller.Handlers
         /// <param name="e"></param>
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            if (e.CommandID == (int)CommandEnum.CloseCommand)
+            m_logging.Log("activated oncommandrecieved " + e.RequestDirPath,MessageTypeEnum.INFO);
+            if (e.CommandID == (int)CommandEnum.CloseCommand && ((e.RequestDirPath == this.m_path || e.RequestDirPath.Equals("*"))))
             {
                 HandlerClose();
             }

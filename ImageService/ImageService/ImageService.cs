@@ -46,9 +46,9 @@ namespace ImageService.ImageService
     {
         private int eventId = 1;
         private ImageServer m_imageServer; // The Image Server
-        private IImageServiceModel model;
-        private IImageController controller;
-        private ILoggingService logging;
+        //private IImageServiceModel model;
+        //private IImageController controller;
+        public ILoggingService logging;
         private EventLog eventLog1;
 
         /// <summary>
@@ -136,17 +136,17 @@ namespace ImageService.ImageService
         private void InitializeService()
         {
             // First reading our app.config
-            string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
-            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+            //string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
+            //string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            //int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             // Initializing and creating our members
-            this.model = new ImageServiceModel(outputDir, thumbnailSize);
-            this.controller = new ImageController(this.model);
+            //this.model = new ImageServiceModel(outputDir, thumbnailSize);
+            //this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
-            int port = int.Parse(ConfigurationManager.AppSettings["port"]);
+            //int port = int.Parse(ConfigurationManager.AppSettings["port"]);
             
             logging.MessageRecieved += OnLog;
-            this.m_imageServer = new ImageServer(this.controller, this.logging, handlerPaths, port);
+            this.m_imageServer = new ImageServer(this.logging);
             // Lastly updating our entry
             eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++ );
         }

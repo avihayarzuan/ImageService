@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.Controller;
 using ImageService.Controller.Handlers;
 using ImageService.ImageService.Commands;
 using ImageService.Infrastructure.Enums;
@@ -16,21 +17,23 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        private Dictionary<int, ICommand> commands;
+        //private Dictionary<int, ICommand> commands;
         private List<TcpClient> activeClients;
         private ILoggingService m_logging;
+        private IImageController m_controller;
 
-        public ClientHandler(ILoggingService logging, ref List<IDirectoryHandler> handlers)
+        public ClientHandler(IImageController controller, ILoggingService logging)
         {
-            commands = new Dictionary<int, ICommand>
-            {
-                { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
-                { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
-                { (int)CommandEnum.CloseCommand, new CloseCommand(ref handlers)}
-            };
+            //commands = new Dictionary<int, ICommand>
+            //{
+            //    { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
+            //    { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
+            //    { (int)CommandEnum.CloseCommand, new CloseCommand(ref handlers)}
+            //};
 
             this.activeClients = new List<TcpClient>();
             m_logging = logging;
+            m_controller = controller;
         }
 
         public void HandleClient(TcpClient client)
@@ -49,12 +52,14 @@ namespace ImageService.Server
                         string commandLine = reader.ReadString();
                         m_logging.Log(commandLine, Logging.Model.MessageTypeEnum.INFO);
                         //Console.WriteLine(commandLine);
-                        string first_word = commandLine.Split(' ').First();
-                        Console.WriteLine(first_word);
-                        if (int.TryParse(first_word, out int commandID))
+                        string[] s = commandLine.Split(' ');
+                        //Console.WriteLine(first_word);
+                        bool ret = int.TryParse(s[0], out int commandID);
+                        if (ret)
                         {
-                            string[] s = { commandLine };
-                            string answer = commands[commandID].Execute(s, out bool result);
+                            //s = { commandLine };
+                            string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
+                            //string answer = commands[commandID].Execute(s, out bool result);
                             try
                             {
                                 m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
@@ -76,6 +81,7 @@ namespace ImageService.Server
                             catch (Exception e)
                             {
                                 m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                                client.Close();
                                 this.activeClients.Remove(client);
                             }
                         }
@@ -83,6 +89,7 @@ namespace ImageService.Server
                     catch (Exception e)
                     {
                         m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                        client.Close();
                         this.activeClients.Remove(client);
                     }
                     //string result = commandLine.ex;
