@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageService.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace ImageService.Controller
 {
     public interface IImageController
     {
+        event EventHandler<CommandRecievedEventArgs> CommandUpStream;
+
         string ExecuteCommand(int commandID, string[] args, out bool result); // Executing the Command Request
     }
 }

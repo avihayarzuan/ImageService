@@ -5,6 +5,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,18 +16,27 @@ namespace ImageService.Controller
     {
         private IImageServiceModel m_model; // The Model Object
         private Dictionary<int, ICommand> commands;
-        //public event EventHandler<CommandRecievedEventArgs> CommandRecieved;
 
-        public ImageController(IImageServiceModel model, ref EventHandler<CommandRecievedEventArgs> ComRec)
+        public event EventHandler<CommandRecievedEventArgs> CommandUpStream;
+
+        public ImageController()
         {
-            m_model = model; // Storing the Model Of The System
+            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+            m_model = new ImageServiceModel(outputDir, thumbnailSize); // Storing the Model Of The System
             commands = new Dictionary<int, ICommand>
             {
                 { (int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) },
                 { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
                 { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
-                { (int)CommandEnum.CloseCommand, new CloseCommand(ref ComRec)}
+                { (int)CommandEnum.CloseCommand, new CloseCommand()}
             };
+            ((CloseCommand)commands[(int)CommandEnum.CloseCommand]).CloseCommandEvent += SendCommand;
+        }
+
+        public void SendCommand(object sender, CommandRecievedEventArgs e)
+        {
+            CommandUpStream?.Invoke(sender, e);
         }
 
         /// <summary>

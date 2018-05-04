@@ -23,7 +23,7 @@ namespace ImageService.Server
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
 
-        private string[] handlersPath;
+        //private string[] handlersPath;
 
         private int port;
         private TcpListener listener;
@@ -49,12 +49,13 @@ namespace ImageService.Server
         /// </param>
         public ImageServer(ILoggingService logging)
         {
-            this.handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
-            string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+            string[] handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
+            //string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            //int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
 
-            m_controller = new ImageController(new ImageServiceModel(outputDir, thumbnailSize), ref CommandRecieved);
+            //System.Threading.Thread.Sleep(10000);
+            m_controller = new ImageController();
             m_logging = logging;
             handlers = new List<IDirectoryHandler>();
             //this.handlersPath = handlersPath;
@@ -70,6 +71,7 @@ namespace ImageService.Server
             }
 
             //this.port = port;
+            m_controller.CommandUpStream += SendCommand;
             this.ch = new ClientHandler(this.m_controller, logging);
             StartTcp();
         }
@@ -106,9 +108,9 @@ namespace ImageService.Server
         /// <summary>
         /// Will be implemented in the future.
         /// </summary>
-        public void SendCommand()
+        public void SendCommand(object sender, CommandRecievedEventArgs e)
         {
-            //
+            CommandRecieved?.Invoke(sender, e);
         }
 
         /// <summary>

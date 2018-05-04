@@ -24,12 +24,6 @@ namespace ImageService.Server
 
         public ClientHandler(IImageController controller, ILoggingService logging)
         {
-            //commands = new Dictionary<int, ICommand>
-            //{
-            //    { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
-            //    { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
-            //    { (int)CommandEnum.CloseCommand, new CloseCommand(ref handlers)}
-            //};
 
             this.activeClients = new List<TcpClient>();
             m_logging = logging;
@@ -60,30 +54,13 @@ namespace ImageService.Server
                             //s = { commandLine };
                             string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
                             //string answer = commands[commandID].Execute(s, out bool result);
-                            try
-                            {
-                                m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
-                                writer.Write(answer);
-                            }
-                            catch (Exception e)
-                            {
-                                m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-                                this.activeClients.Remove(client);
-                            }
+                            m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
+                            writer.Write(answer);
                         }
                         else
                         {
-                            try
-                            {
-                                writer.Write("Error in commandID");
-                                m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
-                            }
-                            catch (Exception e)
-                            {
-                                m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-                                client.Close();
-                                this.activeClients.Remove(client);
-                            }
+                            writer.Write("Error in commandID");
+                            m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
                         }
                     }
                     catch (Exception e)
@@ -99,3 +76,21 @@ namespace ImageService.Server
         }
     }
 }
+//try
+//{
+//}
+//catch (Exception e)
+//{
+//    m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+//client.Close();
+//this.activeClients.Remove(client);
+//}
+//try
+//{
+//}
+//catch (Exception e)
+//{
+//    m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+//    client.Close();
+//    this.activeClients.Remove(client);
+//}
