@@ -1,6 +1,5 @@
 ﻿using ImageService.Controller;
 using ImageService.Controller.Handlers;
-//using ImageService.ImageService.Server;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Model;
@@ -12,7 +11,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-//using ImageService.ImageService.Server
 
 namespace ImageService.Server
 {
@@ -22,9 +20,7 @@ namespace ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
-
-        //private string[] handlersPath;
-
+        // part two members:
         private int port;
         private TcpListener listener;
         private IClientHandler ch;
@@ -50,15 +46,11 @@ namespace ImageService.Server
         public ImageServer(ILoggingService logging)
         {
             string[] handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
-            //string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            //int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
             this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
 
-            //System.Threading.Thread.Sleep(10000);
             m_controller = new ImageController();
             m_logging = logging;
             handlers = new List<IDirectoryHandler>();
-            //this.handlersPath = handlersPath;
             // Creating our handlers
             for (int i = 0; i < handlersPath.Length; i++)
             {
@@ -70,10 +62,13 @@ namespace ImageService.Server
                 m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
 
-            //this.port = port;
             m_controller.CommandUpStream += SendCommand;
             this.ch = new ClientHandler(this.m_controller, logging);
             StartTcp();
+            
+            /// be added later:
+            /// the sendlog function when every log is written
+            //m_logging.MessageRecieved += ch.SendLog;
         }
 
         public void StartTcp()
@@ -106,8 +101,10 @@ namespace ImageService.Server
         }
 
         /// <summary>
-        /// Will be implemented in the future.
+        /// when command is sent' the command event raise the event.
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendCommand(object sender, CommandRecievedEventArgs e)
         {
             CommandRecieved?.Invoke(sender, e);

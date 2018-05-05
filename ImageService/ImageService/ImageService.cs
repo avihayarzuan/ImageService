@@ -46,8 +46,6 @@ namespace ImageService.ImageService
     {
         private int eventId = 1;
         private ImageServer m_imageServer; // The Image Server
-        //private IImageServiceModel model;
-        //private IImageController controller;
         public ILoggingService logging;
         private EventLog eventLog1;
 
@@ -135,16 +133,7 @@ namespace ImageService.ImageService
         /// </summary>
         private void InitializeService()
         {
-            // First reading our app.config
-            //string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
-            //string outputDir = ConfigurationManager.AppSettings["OutputDir"];
-            //int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
-            // Initializing and creating our members
-            //this.model = new ImageServiceModel(outputDir, thumbnailSize);
-            //this.controller = new ImageController(this.model);
             this.logging = new LoggingService();
-            //int port = int.Parse(ConfigurationManager.AppSettings["port"]);
-            
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.logging);
             // Lastly updating our entry

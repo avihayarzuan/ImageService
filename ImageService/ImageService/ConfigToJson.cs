@@ -16,6 +16,8 @@ namespace ImageService.ImageService
 
             string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
+            string src = ConfigurationManager.AppSettings["SourceName"];
+            string log = ConfigurationManager.AppSettings["LogName"];
             string thumbnailSize = ConfigurationManager.AppSettings["ThumbnailSize"];
             string port = ConfigurationManager.AppSettings["port"];
 
@@ -23,6 +25,8 @@ namespace ImageService.ImageService
             {
                 ["handlersPaths"] = JsonConvert.SerializeObject(handlerPaths),
                 ["outputDir"] = outputDir,
+                ["SourceName"] = src,
+                ["LogName"] = log,
                 ["thumbnailSize"] = thumbnailSize,
                 ["port"] = port
             };

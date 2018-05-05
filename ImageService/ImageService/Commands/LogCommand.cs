@@ -35,6 +35,7 @@ namespace ImageService.ImageService.Commands
                     break;
                 }
             }
+            
             string answer = JsonConvert.SerializeObject(map);
 
             result = true;
