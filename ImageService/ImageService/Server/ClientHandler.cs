@@ -1,7 +1,9 @@
 ﻿using ImageService.Controller;
+using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,7 +69,13 @@ namespace ImageService.Server
             string[] str = new string[2];
             str[0] = e.Status.ToString();
             str[1] = e.Message.ToString();
-            string message = JsonConvert.SerializeObject(str);
+
+            JObject logObj = new JObject
+            {
+                ["CommandEnum"] = (int)CommandEnum.GetConfigCommand,
+                ["logValue"] = JsonConvert.SerializeObject(str)
+            };
+            string message = logObj.ToString();
             int size = activeClients.Count;
             for (int i = 0; i < size; i++)
             {

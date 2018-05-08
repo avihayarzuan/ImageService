@@ -6,6 +6,8 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImageService.Infrastructure;
+using ImageService.Infrastructure.Enums;
 
 namespace ImageService.ImageService
 {
@@ -23,6 +25,7 @@ namespace ImageService.ImageService
 
             JObject configObj = new JObject
             {
+                ["CommandEnum"] = (int)CommandEnum.GetConfigCommand,
                 ["handlersPaths"] = JsonConvert.SerializeObject(handlerPaths),
                 ["outputDir"] = outputDir,
                 ["SourceName"] = src,

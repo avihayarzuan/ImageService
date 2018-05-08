@@ -8,6 +8,7 @@ using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
 using ImageService.Server;
+using Newtonsoft.Json.Linq;
 
 namespace ImageService.ImageService.Commands
 {
@@ -22,7 +23,13 @@ namespace ImageService.ImageService.Commands
             CloseCommandEvent?.Invoke(this, e);
 
             result = true;
-            return path;
+
+            JObject closeObj = new JObject
+            {
+                ["CommandEnum"] = (int)CommandEnum.GetConfigCommand,
+                ["path"] = path
+            };
+            return closeObj.ToString();
         }
     }
 }
