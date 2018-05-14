@@ -12,7 +12,6 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        //private Dictionary<int, ICommand> commands;
         private List<TcpClient> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
