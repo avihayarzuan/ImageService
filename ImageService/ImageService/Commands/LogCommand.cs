@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.Infrastructure.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -35,11 +36,13 @@ namespace ImageService.ImageService.Commands
                     break;
                 }
             }
-            
-            string answer = JsonConvert.SerializeObject(map);
-
+            JObject logObj = new JObject
+            {
+                ["CommandEnum"] = (int)CommandEnum.LogCommand,
+                ["logMap"] = JsonConvert.SerializeObject(map)
+            };
             result = true;
-            return answer;
+            return logObj.ToString();
         }
     }
 }

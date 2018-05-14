@@ -1,7 +1,9 @@
 ﻿using ImageService.Controller;
+using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,49 +14,67 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        private List<TcpClient> activeClients;
+        //private Dictionary<int, ICommand> commands;
+        private List<Tuple<TcpClient,NetworkStream,BinaryReader, BinaryWriter>> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
 
+
         public ClientHandler(IImageController controller, ILoggingService logging)
         {
-            this.activeClients = new List<TcpClient>();
+            this.activeClients = new List<Tuple<TcpClient,NetworkStream,BinaryReader,BinaryWriter>>();
             m_logging = logging;
             m_controller = controller;
+
         }
 
         public void HandleClient(TcpClient client)
         {
-            this.activeClients.Add(client);
+            NetworkStream stream = client.GetStream();
+            BinaryReader reader = new BinaryReader(stream);
+            BinaryWriter writer = new BinaryWriter(stream);
+            Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter> t =
+                new Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>
+                (client, stream, reader, writer);
+            //Tuple<TcpClient, NetworkStream> t = new Tuple<TcpClient, NetworkStream>(client, client.GetStream());
+            this.activeClients.Add(t);
+
+            //NetworkStream stream = client.GetStream();
             new Task(() =>
             {
-                using (NetworkStream stream = client.GetStream())
-                using (BinaryReader reader = new BinaryReader(stream))
-                using (BinaryWriter writer = new BinaryWriter(stream))
+                //using (NetworkStream stream = client.GetStream())
                 {
                     try
                     {
-                        string commandLine = reader.ReadString();
-                        m_logging.Log(commandLine, Logging.Model.MessageTypeEnum.INFO);
-                        string[] s = commandLine.Split(' ');
-                        bool ret = int.TryParse(s[0], out int commandID);
-                        if (ret)
+                        while (true)
                         {
-                            string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
-                            m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
-                            writer.Write(answer);
-                        }
-                        else
-                        {
-                            writer.Write("Error in commandID");
-                            m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
+
+                            string commandLine = t.Item3.ReadString();
+                            if (commandLine == null)
+                            {
+                                continue;
+                            }
+                            m_logging.Log(commandLine, Logging.Model.MessageTypeEnum.INFO);
+                            string[] s = commandLine.Split(' ');
+                            bool ret = int.TryParse(s[0], out int commandID);
+                            if (ret)
+                            {
+                                string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
+                                m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
+                                writer.Write(answer);
+                            }
+                            else
+                            {
+                                writer.Write("Error in commandID");
+                                m_logging.Log("Error in commandID", Logging.Model.MessageTypeEnum.FAIL);
+                            }
                         }
                     }
                     catch (Exception e)
                     {
                         m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
                         client.Close();
-                        this.activeClients.Remove(client);
+                        this.activeClients.Remove(t);
                     }
                 }
             }).Start();
@@ -66,23 +86,26 @@ namespace ImageService.Server
             string[] str = new string[2];
             str[0] = e.Status.ToString();
             str[1] = e.Message.ToString();
-            string message = JsonConvert.SerializeObject(str);
+
+            JObject logObj = new JObject
+            {
+                ["CommandEnum"] = (int)CommandEnum.LogCommand,
+                ["logValue"] = JsonConvert.SerializeObject(str)
+            };
+            string message = logObj.ToString();
             int size = activeClients.Count;
             for (int i = 0; i < size; i++)
             {
 
                 try
                 {
-                    using (NetworkStream stream = activeClients[i].GetStream())
-                    using (BinaryReader reader = new BinaryReader(stream))
-                    using (BinaryWriter writer = new BinaryWriter(stream))
                     {
-                        writer.Write(message);
+                        activeClients[i].Item4.Write(message);
                     }
                 }
                 catch
                 {
-                    activeClients[i].Close();
+                    activeClients[i].Item2.Close();
                     activeClients.Remove(activeClients[i]);
                 }
             }
