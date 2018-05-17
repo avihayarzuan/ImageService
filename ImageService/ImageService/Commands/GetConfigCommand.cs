@@ -30,7 +30,7 @@ namespace ImageService.ImageService.Commands
             {
                 ["CommandEnum"] = (int)CommandEnum.GetConfigCommand,
                 ["handlersPaths"] = JsonConvert.SerializeObject(handlerPaths),
-                ["outputDir"] = outputDir,
+                ["Output"] = outputDir,
                 ["SourceName"] = src,
                 ["LogName"] = log,
                 ["thumbnailSize"] = thumbnailSize,

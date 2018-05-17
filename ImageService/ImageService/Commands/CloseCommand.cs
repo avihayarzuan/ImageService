@@ -16,6 +16,16 @@ namespace ImageService.ImageService.Commands
     class CloseCommand : ICommand
     {
         public event EventHandler<CommandRecievedEventArgs> CloseCommandEvent;
+        /// <summary>
+        /// Implements the ICommand interface
+        /// When given closecommand, the method invokes the closeCommandEvent
+        /// </summary>
+        /// <param name="args">
+        /// The command enum and path
+        /// </param>
+        /// <param name="result">
+        /// </param>
+        /// <returns></returns>
         public string Execute(string[] args, out bool result)
         {
             string path = args[1];
