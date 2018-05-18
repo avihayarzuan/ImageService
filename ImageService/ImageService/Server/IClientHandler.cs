@@ -1,4 +1,5 @@
 ﻿using ImageService.Logging.Model;
+using ImageService.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace ImageService.Server
     {
         void HandleClient(TcpClient client);
         void SendLog(object sender, MessageRecievedEventArgs e);
+        void SendCloseHandler(object sender, DirectoryCloseEventArgs e);
     }
 }

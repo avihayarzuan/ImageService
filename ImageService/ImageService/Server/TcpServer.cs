@@ -1,6 +1,7 @@
 ﻿using ImageService.Controller;
 using ImageService.Logging;
 using ImageService.Logging.Model;
+using ImageService.Model;
 using ImageService.Server;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,11 @@ namespace ImageService.ImageService.Server
         public void SendLog(object sender, MessageRecievedEventArgs e)
         {
             ch.SendLog(sender, e);
+        }
+
+        public void SendClose(object sender, DirectoryCloseEventArgs e)
+        {
+            ch.SendCloseHandler(sender, e);
         }
     }
 }

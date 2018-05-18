@@ -2,6 +2,7 @@
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
+using ImageService.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,11 +15,9 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        //private Dictionary<int, ICommand> commands;
         private List<Tuple<TcpClient,NetworkStream,BinaryReader, BinaryWriter>> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
-
 
         public ClientHandler(IImageController controller, ILoggingService logging)
         {
@@ -36,13 +35,10 @@ namespace ImageService.Server
             Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter> t =
                 new Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>
                 (client, stream, reader, writer);
-            //Tuple<TcpClient, NetworkStream> t = new Tuple<TcpClient, NetworkStream>(client, client.GetStream());
             this.activeClients.Add(t);
 
-            //NetworkStream stream = client.GetStream();
             new Task(() =>
             {
-                //using (NetworkStream stream = client.GetStream())
                 {
                     try
                     {
@@ -80,6 +76,31 @@ namespace ImageService.Server
             }).Start();
         }
 
+        public void SendCloseHandler(object sender, DirectoryCloseEventArgs e)
+        {
+            JObject closeObj = new JObject
+            {
+                ["CommandEnum"] = (int)CommandEnum.CloseCommand,
+                ["Directory"] = e.DirectoryPath
+            };
+            string message = closeObj.ToString();
+            int size = activeClients.Count;
+            for (int i = 0; i < size; i++)
+            {
+
+                try
+                {
+                    {
+                        activeClients[i].Item4.Write(message);
+                    }
+                }
+                catch
+                {
+                    activeClients[i].Item2.Close();
+                    activeClients.Remove(activeClients[i]);
+                }
+            }
+        }
 
         public void SendLog(object sender, MessageRecievedEventArgs e)
         {

@@ -24,9 +24,6 @@ namespace ImageService.Server
         // part two members:
         private TcpServer server;
 
-        //private int port;
-        //private TcpListener listener;
-        //private IClientHandler ch;
         #endregion
 
         #region Properties
@@ -49,7 +46,6 @@ namespace ImageService.Server
         public ImageServer(ILoggingService logging)
         {
             string[] handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
-            //this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
 
             m_controller = new ImageController();
             m_logging = logging;
@@ -61,6 +57,7 @@ namespace ImageService.Server
                 handlers[i].StartHandleDirectory(handlersPath[i]);
                 CommandRecieved += handlers[i].OnCommandRecieved;
                 handlers[i].DirectoryClose += OnHandlerClose;
+
                 // Logging each handler creation into the entry
                 m_logging.Log("Directory-Handler created at path:" + handlersPath[i], Logging.Model.MessageTypeEnum.INFO);
             }
@@ -69,42 +66,12 @@ namespace ImageService.Server
 
             this.server = new TcpServer(m_controller, logging);
             this.server.Start();
-            //this.ch = new ClientHandler(this.m_controller, logging);
-            //StartTcp();
 
             /// be added later:
             /// the sendlog function when every log is written
             m_logging.MessageRecieved += server.SendLog;
         }
 
-        //public void StartTcp()
-        //{
-        //    IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-        //    listener = new TcpListener(ep);
-        //    listener.Start();
-        //    m_logging.Log("Started TCP Server", Logging.Model.MessageTypeEnum.INFO);
-
-        //    Task task = new Task(() =>
-        //    {
-        //        while (true)
-        //        {
-        //            try
-        //            {
-        //                TcpClient client = listener.AcceptTcpClient();
-        //                m_logging.Log("Got new connection", Logging.Model.MessageTypeEnum.INFO);
-
-        //                ch.HandleClient(client);
-        //            }
-        //            catch (SocketException)
-        //            {
-        //                m_logging.Log("Socket exception", Logging.Model.MessageTypeEnum.FAIL);
-        //                break;
-        //            }
-        //        }
-        //        m_logging.Log("Server stopped", Logging.Model.MessageTypeEnum.INFO);
-        //    });
-        //    task.Start();
-        //}
 
         /// <summary>
         /// when command is sent' the command event raise the event.
@@ -123,14 +90,6 @@ namespace ImageService.Server
         {
             CommandRecievedEventArgs ev = new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, "*");
             CommandRecieved?.Invoke(this, ev);
-            //try
-            //{
-            //    listener.Stop();
-            //}
-            //catch (Exception e)
-            //{
-            //    m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-            //}
         }
 
         /// <summary>
@@ -143,6 +102,7 @@ namespace ImageService.Server
             IDirectoryHandler dirHandler = (IDirectoryHandler)sender;
             CommandRecieved -= dirHandler.OnCommandRecieved;
             m_logging.Log("Stop handle directory " + e.Message, Logging.Model.MessageTypeEnum.INFO);
+            this.server.SendClose(sender, e);
         }
     }
 }
