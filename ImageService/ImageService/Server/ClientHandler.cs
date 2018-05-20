@@ -46,6 +46,7 @@ namespace ImageService.Server
                         {
 
                             string commandLine = t.Item3.ReadString();
+                            Console.WriteLine(commandLine);
                             if (commandLine == null)
                             {
                                 continue;
