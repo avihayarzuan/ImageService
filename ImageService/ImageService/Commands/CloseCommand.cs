@@ -36,8 +36,8 @@ namespace ImageService.ImageService.Commands
 
             JObject closeObj = new JObject
             {
-                ["CommandEnum"] = (int)CommandEnum.GetConfigCommand,
-                ["path"] = path
+                ["CommandEnum"] = (int)CommandEnum.CloseCommand,
+                ["Directory"] = path
             };
             return closeObj.ToString();
         }
