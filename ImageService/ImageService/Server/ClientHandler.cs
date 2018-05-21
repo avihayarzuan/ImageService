@@ -57,7 +57,7 @@ namespace ImageService.Server
                             if (ret)
                             {
                                 string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
-                                m_logging.Log("activate command" + commandID, Logging.Model.MessageTypeEnum.INFO);
+                                m_logging.Log("activate command " + commandID, Logging.Model.MessageTypeEnum.INFO);
                                 writer.Write(answer);
                             }
                             else
@@ -112,7 +112,8 @@ namespace ImageService.Server
             JObject logObj = new JObject
             {
                 ["CommandEnum"] = (int)CommandEnum.LogCommand,
-                ["logValue"] = JsonConvert.SerializeObject(str)
+                ["logValue"] = JsonConvert.SerializeObject(str),
+                ["firstTime"] = "false"
             };
             string message = logObj.ToString();
             int size = activeClients.Count;

@@ -13,7 +13,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Server
+namespace ImageService.ImageService.Server
 {
     public class ImageServer
     {
@@ -47,9 +47,9 @@ namespace ImageService.Server
         {
             string[] handlersPath = ConfigurationManager.AppSettings["Handler"].Split(';');
 
-            m_controller = new ImageController();
-            m_logging = logging;
             handlers = new List<IDirectoryHandler>();
+            m_controller = new ImageController(ref handlers);
+            m_logging = logging;
             // Creating our handlers
             for (int i = 0; i < handlersPath.Length; i++)
             {
@@ -72,6 +72,19 @@ namespace ImageService.Server
             m_logging.MessageRecieved += server.SendLog;
         }
 
+        //public List<IDirectoryHandler> Handlers { get
+        //    {
+        //        return this.handlers;
+        //    } }
+
+        public List<IDirectoryHandler> GetHandlers()
+        {
+            return this.handlers;    
+            //;
+
+                
+            
+        }
 
         /// <summary>
         /// when command is sent' the command event raise the event.
@@ -101,6 +114,7 @@ namespace ImageService.Server
         {
             IDirectoryHandler dirHandler = (IDirectoryHandler)sender;
             CommandRecieved -= dirHandler.OnCommandRecieved;
+            this.handlers.Remove(dirHandler);
             m_logging.Log("Stop handle directory " + e.Message, Logging.Model.MessageTypeEnum.INFO);
             this.server.SendClose(sender, e);
         }

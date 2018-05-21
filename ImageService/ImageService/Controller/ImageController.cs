@@ -1,4 +1,5 @@
 ﻿using ImageService.Commands;
+using ImageService.Controller.Handlers;
 using ImageService.ImageService.Commands;
 using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
@@ -19,7 +20,7 @@ namespace ImageService.Controller
 
         public event EventHandler<CommandRecievedEventArgs> CommandUpStream;
 
-        public ImageController()
+        public ImageController(ref List<IDirectoryHandler> list)
         {
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
             int thumbnailSize = Int32.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
@@ -27,7 +28,7 @@ namespace ImageService.Controller
             commands = new Dictionary<int, ICommand>
             {
                 { (int)CommandEnum.NewFileCommand, new NewFileCommand(m_model) },
-                { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand()},
+                { (int)CommandEnum.GetConfigCommand, new ImageService.Commands.GetConfigCommand(ref list)},
                 { (int)CommandEnum.LogCommand, new ImageService.Commands.LogCommand()},
                 { (int)CommandEnum.CloseCommand, new CloseCommand()}
             };

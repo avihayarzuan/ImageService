@@ -39,7 +39,8 @@ namespace ImageService.ImageService.Commands
             JObject logObj = new JObject
             {
                 ["CommandEnum"] = (int)CommandEnum.LogCommand,
-                ["logMap"] = JsonConvert.SerializeObject(map)
+                ["logMap"] = JsonConvert.SerializeObject(map),
+                ["firstTime"] = "true"
             };
             result = true;
             return logObj.ToString();

@@ -16,6 +16,7 @@ using ImageService.Logging.Model;
 using System.Configuration;
 using ImageService.Infrastructure;
 using System.Timers;
+using ImageService.ImageService.Server;
 
 namespace ImageService.ImageService
 {
