@@ -1,14 +1,11 @@
 ﻿using ImageService.Commands;
 using ImageService.Controller.Handlers;
 using ImageService.ImageService.Commands;
-using ImageService.Infrastructure;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ImageService.Controller
@@ -20,6 +17,12 @@ namespace ImageService.Controller
 
         public event EventHandler<CommandRecievedEventArgs> CommandUpStream;
 
+        /// <summary>
+        /// Constructor of The controller
+        /// </summary>
+        /// <param name="list">
+        /// a reference to list of all the active clients
+        /// </param>
         public ImageController(ref List<IDirectoryHandler> list)
         {
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
@@ -35,6 +38,11 @@ namespace ImageService.Controller
             ((CloseCommand)commands[(int)CommandEnum.CloseCommand]).CloseCommandEvent += SendCommand;
         }
 
+        /// <summary>
+        /// Delegate Command, activates when a close command event is happening
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendCommand(object sender, CommandRecievedEventArgs e)
         {
             CommandUpStream?.Invoke(sender, e);

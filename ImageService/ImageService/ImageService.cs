@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.ServiceProcess;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using ImageService.Server;
-using ImageService.Controller;
-using ImageService.Model;
+﻿using ImageService.ImageService.Server;
 using ImageService.Logging;
 using ImageService.Logging.Model;
+using System;
 using System.Configuration;
-using ImageService.Infrastructure;
-using System.Timers;
-using ImageService.ImageService.Server;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.ServiceProcess;
 
 namespace ImageService.ImageService
 {
@@ -46,7 +35,7 @@ namespace ImageService.ImageService
     public partial class ImageService : ServiceBase
     {
         private int eventId = 1;
-        private ImageServer m_imageServer; // The Image Server
+        private ImageServer m_imageServer;
         public ILoggingService logging;
         private EventLog eventLog1;
 
@@ -82,7 +71,6 @@ namespace ImageService.ImageService
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry("Starting ImageService", EventLogEntryType.Information, eventId++);
-            // Reading from appconfig 
             InitializeService();
         }
 
@@ -138,7 +126,7 @@ namespace ImageService.ImageService
             logging.MessageRecieved += OnLog;
             this.m_imageServer = new ImageServer(this.logging);
             // Lastly updating our entry
-            eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++ );
+            eventLog1.WriteEntry("End of initialzation", EventLogEntryType.Information, eventId++);
         }
     }
 }

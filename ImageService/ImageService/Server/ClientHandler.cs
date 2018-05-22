@@ -15,18 +15,29 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
+        // all clients in the list are in a shape of a tuple as follows:
         private List<Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
 
+        /// <summary>
+        /// Constructor of ClientHandler Class.
+        /// the Class responsible on the communication with all the clients.
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="logging"></param>
         public ClientHandler(IImageController controller, ILoggingService logging)
         {
             this.activeClients = new List<Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>>();
             m_logging = logging;
             m_controller = controller;
-
         }
 
+        /// <summary>
+        /// Given client, the method get his stream, binaryReader and BinaryWriter
+        /// make's a Tuple of them' and start 'Handle'.
+        /// </summary>
+        /// <param name="client"></param>
         public void HandleClient(TcpClient client)
         {
             NetworkStream stream = client.GetStream();
@@ -76,6 +87,11 @@ namespace ImageService.Server
             }).Start();
         }
 
+        /// <summary>
+        /// Delegate Commad, send the clients which directory was closed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendCloseHandler(object sender, DirectoryCloseEventArgs e)
         {
             JObject closeObj = new JObject
@@ -102,6 +118,11 @@ namespace ImageService.Server
             }
         }
 
+        /// <summary>
+        /// Delegate Command to send a new Log to connected clients.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendLog(object sender, MessageRecievedEventArgs e)
         {
             string[] str = new string[2];
@@ -133,5 +154,4 @@ namespace ImageService.Server
             }
         }
     }
-
 }

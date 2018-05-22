@@ -4,12 +4,9 @@ using ImageService.Logging.Model;
 using ImageService.Model;
 using ImageService.Server;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ImageService.ImageService.Server
@@ -21,14 +18,22 @@ namespace ImageService.ImageService.Server
         private IClientHandler ch;
         private ILoggingService m_logging;
 
+        /// <summary>
+        /// Constructor of the Tcp Server
+        /// The server starts a thread that constantly listen to clients
+        /// </summary>
+        /// <param name="m_controller"></param>
+        /// <param name="logging"></param>
         public TcpServer(IImageController m_controller, ILoggingService logging)
         {
             this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
-
             this.m_logging = logging;
             this.ch = new ClientHandler(m_controller, logging);
         }
 
+        /// <summary>
+        /// Start listen to clients in a different thread
+        /// </summary>
         public void Start()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
@@ -58,6 +63,9 @@ namespace ImageService.ImageService.Server
             task.Start();
         }
 
+        /// <summary>
+        /// Stop listening to port
+        /// </summary>
         public void Stop()
         {
             try
@@ -70,11 +78,20 @@ namespace ImageService.ImageService.Server
             }
         }
 
+        /// <summary>
+        /// Delegate method to send activate an event in upper class
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendLog(object sender, MessageRecievedEventArgs e)
         {
             ch.SendLog(sender, e);
         }
-
+        /// <summary>
+        /// Delegate method to send activate an event in upper class
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void SendClose(object sender, DirectoryCloseEventArgs e)
         {
             ch.SendCloseHandler(sender, e);

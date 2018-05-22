@@ -1,15 +1,10 @@
-﻿using ImageService.Model;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImageService.Infrastructure;
-using ImageService.Infrastructure.Enums;
+﻿using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
-using System.Text.RegularExpressions;
+using ImageService.Model;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace ImageService.Controller.Handlers
@@ -94,6 +89,10 @@ namespace ImageService.Controller.Handlers
             }
         }
 
+        /// <summary>
+        /// Getter for the path value
+        /// </summary>
+        /// <returns> path value</returns>
         public string GetPath()
         {
             return this.m_path;

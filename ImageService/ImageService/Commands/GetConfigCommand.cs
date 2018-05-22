@@ -1,29 +1,32 @@
-﻿using ImageService.Server;
-using ImageService.Commands;
+﻿using ImageService.Commands;
+using ImageService.Controller.Handlers;
 using ImageService.Infrastructure.Enums;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImageService.Controller.Handlers;
 
 namespace ImageService.ImageService.Commands
 {
     class GetConfigCommand : ICommand
     {
         private List<IDirectoryHandler> list;
+
         public GetConfigCommand(ref List<IDirectoryHandler> list)
         {
             this.list = list;
         }
 
+        /// <summary>
+        /// The method parse configurations of the service and return a 
+        /// JSON string with all the values.
+        /// The class hold reference list to all the active directories.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         public string Execute(string[] args, out bool result)
         {
-            result = true;
 
             int size = this.list.Count;
             string[] handlerPaths = new string[size];
@@ -31,10 +34,7 @@ namespace ImageService.ImageService.Commands
             {
                 handlerPaths[i] = list[i].GetPath();
             }
-            
 
-
-            //string[] handlerPaths = ConfigurationManager.AppSettings["Handler"].Split(';');
             string outputDir = ConfigurationManager.AppSettings["OutputDir"];
             string src = ConfigurationManager.AppSettings["SourceName"];
             string log = ConfigurationManager.AppSettings["LogName"];
@@ -51,6 +51,7 @@ namespace ImageService.ImageService.Commands
                 ["thumbnailSize"] = thumbnailSize,
                 ["port"] = port
             };
+            result = true;
             return configObj.ToString();
 
         }

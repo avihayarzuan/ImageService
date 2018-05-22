@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ImageService.Commands;
-using ImageService.Controller.Handlers;
+﻿using ImageService.Commands;
 using ImageService.Infrastructure.Enums;
 using ImageService.Model;
-using ImageService.Server;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace ImageService.ImageService.Commands
 {
-    
+
     class CloseCommand : ICommand
     {
         public event EventHandler<CommandRecievedEventArgs> CloseCommandEvent;

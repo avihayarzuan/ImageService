@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace ImageService.ImageService.Logging.Model
 {
+    /// <summary>
+    /// Class that holds a two strings
+    /// One of type message, the second is the message itself
+    /// </summary>
     public class LogMessage
     {
         public string Type { get; private set; }

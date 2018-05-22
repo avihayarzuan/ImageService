@@ -1,17 +1,11 @@
 ﻿using ImageService.Controller;
 using ImageService.Controller.Handlers;
-using ImageService.ImageService.Server;
 using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageService.ImageService.Server
 {
@@ -21,7 +15,6 @@ namespace ImageService.ImageService.Server
         private IImageController m_controller;
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
-        // part two members:
         private TcpServer server;
 
         #endregion
@@ -67,8 +60,6 @@ namespace ImageService.ImageService.Server
             this.server = new TcpServer(m_controller, logging);
             this.server.Start();
 
-            /// be added later:
-            /// the sendlog function when every log is written
             m_logging.MessageRecieved += server.SendLog;
         }
 

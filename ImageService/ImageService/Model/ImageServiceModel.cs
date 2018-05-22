@@ -1,13 +1,8 @@
-﻿using ImageService.Infrastructure;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ImageService.Model
 {
@@ -17,8 +12,6 @@ namespace ImageService.Model
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
-        //we init this once so that if the function is repeatedly called
-        //it isn't stressing the garbage man
         private static Regex r = new Regex(":");
         #endregion
         /// <summary>
@@ -109,9 +102,9 @@ namespace ImageService.Model
                     // Incase the image doesnt have a date we'll return the files date
                     return File.GetCreationTime(path);
                 }
-
             }
         }
+
         /// <summary>
         /// Save the images thubmnail according to the thumbnailSize
         /// </summary>
@@ -156,6 +149,5 @@ namespace ImageService.Model
             }
             return path;
         }
-
     }
 }
