@@ -86,7 +86,7 @@ namespace ImageService.Controller.Handlers
             watcher.Changed += new FileSystemEventHandler(OnCreated);
             watcher.EnableRaisingEvents = true;
             this.m_listWatchers.Add(watcher);
-            m_logging.Log(" watcher added in " + dirPath, MessageTypeEnum.INFO);
+            m_logging.Log("Watcher added in " + dirPath, MessageTypeEnum.INFO);
 
             } catch (Exception e)
             {

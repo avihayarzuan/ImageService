@@ -15,13 +15,13 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        private List<Tuple<TcpClient,NetworkStream,BinaryReader, BinaryWriter>> activeClients;
+        private List<Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
 
         public ClientHandler(IImageController controller, ILoggingService logging)
         {
-            this.activeClients = new List<Tuple<TcpClient,NetworkStream,BinaryReader,BinaryWriter>>();
+            this.activeClients = new List<Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>>();
             m_logging = logging;
             m_controller = controller;
 
@@ -51,13 +51,12 @@ namespace ImageService.Server
                             {
                                 continue;
                             }
-                            m_logging.Log(commandLine, Logging.Model.MessageTypeEnum.INFO);
                             string[] s = commandLine.Split(' ');
                             bool ret = int.TryParse(s[0], out int commandID);
                             if (ret)
                             {
                                 string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
-                                m_logging.Log("activate command " + commandID, Logging.Model.MessageTypeEnum.INFO);
+                                m_logging.Log("Activate command " + commandID, Logging.Model.MessageTypeEnum.INFO);
                                 writer.Write(answer);
                             }
                             else
@@ -67,9 +66,9 @@ namespace ImageService.Server
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+                        m_logging.Log("Client has disconnected", Logging.Model.MessageTypeEnum.INFO);
                         client.Close();
                         this.activeClients.Remove(t);
                     }

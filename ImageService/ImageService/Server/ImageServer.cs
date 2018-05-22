@@ -72,20 +72,6 @@ namespace ImageService.ImageService.Server
             m_logging.MessageRecieved += server.SendLog;
         }
 
-        //public List<IDirectoryHandler> Handlers { get
-        //    {
-        //        return this.handlers;
-        //    } }
-
-        public List<IDirectoryHandler> GetHandlers()
-        {
-            return this.handlers;    
-            //;
-
-                
-            
-        }
-
         /// <summary>
         /// when command is sent' the command event raise the event.
         /// </summary>
