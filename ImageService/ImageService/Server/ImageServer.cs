@@ -60,7 +60,8 @@ namespace ImageService.ImageService.Server
             this.server = new TcpServer(m_controller, logging);
             this.server.Start();
 
-            m_logging.MessageRecieved += server.SendLog;
+            /* the following comment cancel the log to update automaticlly all the clients on a new log*/
+            //m_logging.MessageRecieved += server.SendLog;
         }
 
         /// <summary>
