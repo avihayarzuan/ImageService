@@ -15,7 +15,7 @@ namespace ImageService.Server
 {
     class ClientHandler : IClientHandler
     {
-        // all clients in the list are in a shape of a tuple as follows:
+        // All clients in the list are in a shape of a tuple as follows:
         private List<Tuple<TcpClient, NetworkStream, BinaryReader, BinaryWriter>> activeClients;
         private ILoggingService m_logging;
         private IImageController m_controller;
@@ -67,7 +67,7 @@ namespace ImageService.Server
                             if (ret)
                             {
                                 string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
-                                m_logging.Log("Activate command " + commandID, Logging.Model.MessageTypeEnum.INFO);
+                                m_logging.Log("Activate command " + GetCommandName(commandID) , MessageTypeEnum.INFO);
                                 writer.Write(answer);
                             }
                             else
@@ -79,13 +79,30 @@ namespace ImageService.Server
                     }
                     catch
                     {
-                        m_logging.Log("Client has disconnected", Logging.Model.MessageTypeEnum.INFO);
+                        m_logging.Log("Client has disconnected", Logging.Model.MessageTypeEnum.WARNING);
                         client.Close();
                         this.activeClients.Remove(t);
                     }
                 }
             }).Start();
         }
+
+        public string GetCommandName(int id)
+        {
+            switch (id)
+            {
+                case 0:
+                    return CommandEnum.NewFileCommand.ToString();
+                case 1:
+                    return CommandEnum.GetConfigCommand.ToString();
+                case 2:
+                    return CommandEnum.LogCommand.ToString();
+                case 3:
+                    return CommandEnum.CloseCommand.ToString();
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Delegate Commad, send the clients which directory was closed.
