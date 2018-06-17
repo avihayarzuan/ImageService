@@ -28,7 +28,8 @@ namespace ImageService.ImageService.Server
         {
             this.port = int.Parse(ConfigurationManager.AppSettings["port"]);
             this.m_logging = logging;
-            this.ch = new ClientHandler(m_controller, logging);
+            //this.ch = new ClientHandler(m_controller, logging);
+            this.ch = new ClientHandlerMobile(m_controller, logging);
         }
 
         /// <summary>

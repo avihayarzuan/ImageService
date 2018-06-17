@@ -67,7 +67,7 @@ namespace ImageService.Server
                             if (ret)
                             {
                                 string answer = m_controller.ExecuteCommand(commandID, s, out bool result);
-                                m_logging.Log("Activate command " + commandID, Logging.Model.MessageTypeEnum.INFO + " " + answer);
+                                m_logging.Log("Activate command " + commandID, Logging.Model.MessageTypeEnum.INFO);
                                 writer.Write(answer);
                             }
                             else
@@ -155,3 +155,6 @@ namespace ImageService.Server
         }
     }
 }
+
+
+

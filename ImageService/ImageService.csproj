@@ -79,6 +79,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageService\Server\ClientHandler.cs" />
+    <Compile Include="ImageService\Server\ClientHandlerMobile.cs" />
     <Compile Include="ImageService\Server\ImageServer.cs" />
     <Compile Include="ImageService\Server\IClientHandler.cs" />
     <Compile Include="ImageService\Server\TcpServer.cs" />
