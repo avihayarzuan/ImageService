@@ -61,7 +61,7 @@ namespace ImageService.Model
                 // If the file already exists we'll give it a new name
                 if (File.Exists(destPath))
                 {
-                    destPath = DuplicateFile(destPath);
+                    //destPath = DuplicateFile(destPath);
                 }
                 // Lastly saving our created thumbnail and moving our image
                 File.Move(path, destPath);

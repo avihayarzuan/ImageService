@@ -37,7 +37,7 @@ namespace ImageService.ImageService.Server
         /// </summary>
         public void Start()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7999);
             listener = new TcpListener(ep);
             listener.Start();
             m_logging.Log("Started TCP Server", Logging.Model.MessageTypeEnum.INFO);
