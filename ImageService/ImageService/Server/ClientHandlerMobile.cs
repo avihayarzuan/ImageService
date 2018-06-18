@@ -90,8 +90,18 @@ namespace ImageService.Server
         {
             using (var ms = new MemoryStream(bytesArray))
             {
-                string path = ConfigurationManager.AppSettings["OutputDir"];
-                File.WriteAllBytes(path + "\\" + name, bytesArray);
+                // Put the new image in one of our handlers
+                string path = ConfigurationManager.AppSettings["Handler"].Split(';')[0];
+                try
+                {
+                    File.WriteAllBytes(path + "\\" + name, bytesArray);
+                }
+                catch (Exception e)
+                {
+                    m_logging.Log("Error converting bytes to photo", Logging.Model.MessageTypeEnum.FAIL);
+                    m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
+
+                }
             }
 
         }
