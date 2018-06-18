@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ImageService.ImageService.Server
 {
-    class TcpServer
+    class TcpMobileServer
     {
         private int port;
         private TcpListener listener;
@@ -24,11 +24,11 @@ namespace ImageService.ImageService.Server
         /// </summary>
         /// <param name="m_controller"></param>
         /// <param name="logging"></param>
-        public TcpServer(IImageController m_controller, ILoggingService logging)
+        public TcpMobileServer(IImageController m_controller, ILoggingService logging)
         {
-            this.port = int.Parse(ConfigurationManager.AppSettings["DefPort"]);
+            this.port = int.Parse(ConfigurationManager.AppSettings["MobilePort"]);
             this.m_logging = logging;
-            this.ch = new ClientHandler(m_controller, logging);
+            this.ch = new ClientHandlerMobile(m_controller, logging);
         }
 
         /// <summary>
@@ -76,25 +76,6 @@ namespace ImageService.ImageService.Server
             {
                 m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
             }
-        }
-
-        /// <summary>
-        /// Delegate method to send activate an event in upper class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void SendLog(object sender, MessageRecievedEventArgs e)
-        {
-            ch.SendLog(sender, e);
-        }
-        /// <summary>
-        /// Delegate method to send activate an event in upper class
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void SendClose(object sender, DirectoryCloseEventArgs e)
-        {
-            ch.SendCloseHandler(sender, e);
         }
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="ImageService\Server\ClientHandlerMobile.cs" />
     <Compile Include="ImageService\Server\ImageServer.cs" />
     <Compile Include="ImageService\Server\IClientHandler.cs" />
+    <Compile Include="ImageService\Server\TcpMobileServer.cs" />
     <Compile Include="ImageService\Server\TcpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

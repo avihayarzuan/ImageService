@@ -100,7 +100,6 @@ namespace ImageService.Server
                 {
                     m_logging.Log("Error converting bytes to photo", Logging.Model.MessageTypeEnum.FAIL);
                     m_logging.Log(e.Message, Logging.Model.MessageTypeEnum.FAIL);
-
                 }
             }
 

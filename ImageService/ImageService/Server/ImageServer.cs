@@ -16,6 +16,7 @@ namespace ImageService.ImageService.Server
         private ILoggingService m_logging;
         private List<IDirectoryHandler> handlers;
         private TcpServer server;
+        private TcpMobileServer mobileServer;
 
         #endregion
 
@@ -59,6 +60,8 @@ namespace ImageService.ImageService.Server
 
             this.server = new TcpServer(m_controller, logging);
             this.server.Start();
+            this.mobileServer = new TcpMobileServer(m_controller, logging);
+            this.mobileServer.Start();
 
             /* the following comment cancel the log to update automaticlly all the clients on a new log*/
             //m_logging.MessageRecieved += server.SendLog;
