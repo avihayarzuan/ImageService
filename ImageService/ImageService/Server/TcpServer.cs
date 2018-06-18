@@ -7,6 +7,7 @@ using System;
 using System.Configuration;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ImageService.ImageService.Server
@@ -37,7 +38,8 @@ namespace ImageService.ImageService.Server
         /// </summary>
         public void Start()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            Thread.Sleep(10000);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7999);
             listener = new TcpListener(ep);
             listener.Start();
             m_logging.Log("Started TCP Server", Logging.Model.MessageTypeEnum.INFO);

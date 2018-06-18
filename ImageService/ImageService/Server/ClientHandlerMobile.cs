@@ -34,6 +34,7 @@ namespace ImageService.Server
             m_logging = logging;
             m_controller = controller;
         }
+        //172.18.30.104
 
         /// <summary>
         /// Given client, the method get his stream, binaryReader and BinaryWriter
