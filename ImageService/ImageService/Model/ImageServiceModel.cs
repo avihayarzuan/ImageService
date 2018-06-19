@@ -58,10 +58,10 @@ namespace ImageService.Model
                 // Creating a folder for our picture and thumbnail
                 Directory.CreateDirectory(picDestFolder);
                 Directory.CreateDirectory(thumbFolderDest);
-                // If the file already exists we'll give it a new name
-                if (File.Exists(destPath))
+                // If the file already exists and its not the same file
+                if (File.Exists(destPath) && !FileEquals( path,destPath))
                 {
-                    //destPath = DuplicateFile(destPath);
+                    destPath = DuplicateFile(destPath);
                 }
                 // Lastly saving our created thumbnail and moving our image
                 File.Move(path, destPath);
@@ -148,6 +148,30 @@ namespace ImageService.Model
                 i++;
             }
             return path;
+        }
+
+        /// <summary>
+        /// Simple function for compating two files by bytes
+        /// </summary>
+        /// <param name="path1">first files path</param>
+        /// <param name="path2">second files path</param>
+        /// <returns></returns>
+        private bool FileEquals(string path1, string path2)
+        {
+            byte[] file1 = File.ReadAllBytes(path1);
+            byte[] file2 = File.ReadAllBytes(path2);
+            if (file1.Length == file2.Length)
+            {
+                for (int i = 0; i < file1.Length; i++)
+                {
+                    if (file1[i] != file2[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
     }
 }
