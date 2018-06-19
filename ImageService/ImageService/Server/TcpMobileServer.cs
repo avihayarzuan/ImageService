@@ -19,8 +19,8 @@ namespace ImageService.ImageService.Server
         private ILoggingService m_logging;
 
         /// <summary>
-        /// Constructor of the Tcp Server
-        /// The server starts a thread that constantly listen to clients
+        /// Constructor of the Tcp Mobile Server
+        /// The server starts a thread that constantly listen to clients of mobile port
         /// </summary>
         /// <param name="m_controller"></param>
         /// <param name="logging"></param>

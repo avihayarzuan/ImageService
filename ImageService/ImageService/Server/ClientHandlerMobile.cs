@@ -3,8 +3,6 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging;
 using ImageService.Logging.Model;
 using ImageService.Model;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -23,8 +21,8 @@ namespace ImageService.Server
         private IImageController m_controller;
 
         /// <summary>
-        /// Constructor of ClientHandler Class.
-        /// the Class responsible on the communication with all the clients.
+        /// Constructor of ClientHandlerMobile Class.
+        /// The Class responsible on the communication with all the clients.
         /// </summary>
         /// <param name="controller"></param>
         /// <param name="logging"></param>
@@ -34,18 +32,15 @@ namespace ImageService.Server
             m_logging = logging;
             m_controller = controller;
         }
-        //172.18.30.104
 
         /// <summary>
-        /// Given client, the method get his stream, binaryReader and BinaryWriter
-        /// make's a Tuple of them' and start 'Handle'.
+        /// Given client, the method get his stream  make's a Tuple of them
+        /// read' and transform photos from bytes
         /// </summary>
         /// <param name="client"></param>
         public void HandleClient(TcpClient client)
         {
             NetworkStream stream = client.GetStream();
-            //BinaryReader reader = new BinaryReader(stream);
-            //BinaryWriter writer = new BinaryWriter(stream);
             Tuple<TcpClient, NetworkStream> t = new Tuple<TcpClient, NetworkStream>(client, stream);
             this.activeClients.Add(t);
             new Task(() =>
@@ -86,6 +81,11 @@ namespace ImageService.Server
             }).Start();
         }
 
+        /// <summary>
+        /// Transform Array of bytes to image.
+        /// </summary>
+        /// <param name="name">The name of the photo</param>
+        /// <param name="bytesArray">The bytes array</param>
         public void ArrayToImage(string name, byte[] bytesArray)
         {
             using (var ms = new MemoryStream(bytesArray))
@@ -105,6 +105,12 @@ namespace ImageService.Server
 
         }
 
+        /// <summary>
+        /// Transfers the specified source to the correct location
+        /// </summary>
+        /// <param name="src">The source array</param>
+        /// <param name="dst">The Destination</param>
+        /// <param name="start">The start position</param>
         public void Transfer(byte[] src, byte[] dst, int start)
         {
             for (int i = start; i < src.Length; i++)
